@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<WarningsAsErrors>nullable</WarningsAsErrors>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>VDT.Core.Blazor.DragAndDropList</PackageId>
+		<Version>0.1.0</Version>
+		<Title>VDT.Core.Blazor.DragAndDropList</Title>
+		<PackageIcon>icon_128.png</PackageIcon>
+		<Description>Blazor component that allows users to reorder items in a list by dragging and dropping</Description>
+		<Authors>Maikel Bos</Authors>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Copyright>Copyright © 2024 Maikel Bos</Copyright>
+		<PackageTags>TODO</PackageTags>
+		<PackageProjectUrl>https://github.com/maikelbos0/VDT.Core.Blazor.DragAndDropList</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" pack="true" PackagePath="." />
+		<None Include="icon_128.png" pack="true" PackagePath="." />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net7.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+	</ItemGroup>
+
+</Project>

@@ -19,12 +19,24 @@ namespace VDT.Core.Blazor.DragAndDropList.Tests {
         public void Drag() {
             var subject = new DragAndDropList<string>() {
                 Items = ["Foo", "Bar", "Baz"],
+                DraggingItemIndex = 1
+            };
+
+            subject.Drag(new MouseEventArgs() { PageY = 234 });
+
+            Assert.Equal(234, subject.CurrentY);
+        }
+
+        [Fact]
+        public void Drag_Without_DraggingItemIndex() {
+            var subject = new DragAndDropList<string>() {
+                Items = ["Foo", "Bar", "Baz"],
                 DraggingItemIndex = -1
             };
 
             subject.Drag(new MouseEventArgs() { PageY = 234 });
 
-            Assert.Equal(123, subject.CurrentY);
+            Assert.Equal(0, subject.CurrentY);
         }
     }
 }

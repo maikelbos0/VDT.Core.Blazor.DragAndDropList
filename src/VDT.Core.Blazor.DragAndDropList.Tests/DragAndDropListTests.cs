@@ -14,5 +14,17 @@ namespace VDT.Core.Blazor.DragAndDropList.Tests {
             Assert.Equal(1, subject.DraggingItemIndex);
             Assert.Equal(123, subject.StartY);
         }
+
+        [Fact]
+        public void Drag() {
+            var subject = new DragAndDropList<string>() {
+                Items = ["Foo", "Bar", "Baz"],
+                DraggingItemIndex = -1
+            };
+
+            subject.Drag(new MouseEventArgs() { PageY = 234 });
+
+            Assert.Equal(123, subject.CurrentY);
+        }
     }
 }

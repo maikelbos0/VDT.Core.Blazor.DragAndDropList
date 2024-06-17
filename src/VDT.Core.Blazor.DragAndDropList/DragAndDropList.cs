@@ -7,6 +7,7 @@ namespace VDT.Core.Blazor.DragAndDropList;
 
 public class DragAndDropList<TItem> : ComponentBase {
     internal double StartY { get; set; } = 0;
+    internal double CurrentY { get; set; } = 0;
     internal int DraggingItemIndex { get; set; } = -1;
 
     [Parameter] public List<TItem> Items { get; set; } = new();
@@ -29,8 +30,14 @@ public class DragAndDropList<TItem> : ComponentBase {
         builder.CloseElement();
     }
 
-    public void StartDragging(TItem itemToDrag, MouseEventArgs args) {
+    internal void StartDragging(TItem itemToDrag, MouseEventArgs args) {
         DraggingItemIndex = Items.IndexOf(itemToDrag);
         StartY = args.PageY;
+    }
+
+    internal void Drag(MouseEventArgs args) {
+        if (DraggingItemIndex != -1) {
+            CurrentY = args.PageY;
+        }
     }
 }

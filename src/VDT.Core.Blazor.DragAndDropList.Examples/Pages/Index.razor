@@ -12,7 +12,7 @@
                 <div class="text-muted text-truncate">@context.Item.Id</div>
             </div>
             <div>
-                <button class="btn btn-primary"><span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span></button>
+                <button class="btn btn-primary"><span>&varr;</span><span class="ps-2 d-none d-lg-inline" @onclick="context.StartDragging">Move</span></button>
             </div>
         </div>
     </ItemTemplate>

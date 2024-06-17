@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
+using System;
 using System.Collections.Generic;
 
 namespace VDT.Core.Blazor.DragAndDropList;
@@ -17,16 +18,21 @@ public class DragAndDropList<TItem> : ComponentBase {
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
         builder.AddAttribute(2, "class", "drag-and-drop-list");
+        
         builder.OpenRegion(3);
-
         foreach (var item in Items) {
             builder.OpenElement(4, "div");
             builder.AddAttribute(5, "class", "drag-and-drop-list-item");
             builder.AddContent(6, ItemTemplate(new ItemContext<TItem>(this, item)));
             builder.CloseElement();
         }
-
         builder.CloseRegion();
+
+        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(7);
+        builder.AddAttribute(8, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
+        builder.AddAttribute(9, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.CloseComponent();
+
         builder.CloseElement();
     }
 
@@ -38,6 +44,14 @@ public class DragAndDropList<TItem> : ComponentBase {
     internal void Drag(MouseEventArgs args) {
         if (DraggingItemIndex != -1) {
             CurrentY = args.PageY;
+            Console.WriteLine(CurrentY);
+        }
+    }
+
+    internal void StopDragging(MouseEventArgs args) {
+        if (DraggingItemIndex != -1) {
+            DraggingItemIndex = -1;
+            Console.WriteLine("Done");
         }
     }
 }

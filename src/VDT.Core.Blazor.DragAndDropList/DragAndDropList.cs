@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace VDT.Core.Blazor.DragAndDropList;
 
 public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
-    internal const string ModuleLocation = "./_content/VDT.Core.Blazor.DragAndDropList/draganddroplist.2d284769ef.js";
+    internal const string ModuleLocation = "./_content/VDT.Core.Blazor.DragAndDropList/draganddroplist.31d575906d.js";
 
     private IJSObjectReference? moduleReference;
     private ElementReference containerReference;

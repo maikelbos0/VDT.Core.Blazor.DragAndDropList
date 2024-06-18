@@ -12,10 +12,12 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal const string ModuleLocation = "./_content/VDT.Core.Blazor.DragAndDropList/draganddroplist.2d284769ef.js";
 
     private IJSObjectReference? moduleReference;
+    private ElementReference containerReference;
 
     internal double StartY { get; set; } = 0;
     internal double CurrentY { get; set; } = 0;
     internal int DraggingItemIndex { get; set; } = -1;
+    internal List<double> Heights { get; set; } = new();
     internal IJSObjectReference ModuleReference {
         get => moduleReference ?? throw new InvalidOperationException($"{nameof(ModuleReference)} is only available after the list has rendered");
         set => moduleReference = value;
@@ -37,27 +39,30 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
         builder.AddAttribute(2, "class", "drag-and-drop-list");
-        
-        builder.OpenRegion(3);
+        builder.AddElementReferenceCapture(3, containerReference => this.containerReference = containerReference);
+
+        builder.OpenRegion(4);
         foreach (var item in Items) {
-            builder.OpenElement(4, "div");
-            builder.AddAttribute(5, "class", "drag-and-drop-list-item");
-            builder.AddContent(6, ItemTemplate(new ItemContext<TItem>(this, item)));
+            builder.OpenElement(5, "div");
+            builder.AddAttribute(6, "class", "drag-and-drop-list-item");
+            builder.AddContent(7, ItemTemplate(new ItemContext<TItem>(this, item)));
             builder.CloseElement();
         }
         builder.CloseRegion();
 
-        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(7);
-        builder.AddAttribute(8, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
-        builder.AddAttribute(9, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(8);
+        builder.AddAttribute(9, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
+        builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
     }
 
-    internal void StartDragging(TItem itemToDrag, MouseEventArgs args) {
+    internal async Task StartDragging(TItem itemToDrag, MouseEventArgs args) {
         DraggingItemIndex = Items.IndexOf(itemToDrag);
         StartY = args.PageY;
+        Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
+        Console.WriteLine(string.Join(',', Heights));
     }
 
     internal void Drag(MouseEventArgs args) {

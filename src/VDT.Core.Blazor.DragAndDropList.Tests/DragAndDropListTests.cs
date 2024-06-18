@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
+using NSubstitute;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace VDT.Core.Blazor.DragAndDropList.Tests;
@@ -32,15 +36,19 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public void StartDragging() {
+    public async Task StartDragging() {
         var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz"]
+            Items = ["Foo", "Bar", "Baz"],
+            ModuleReference = Substitute.For<IJSObjectReference>()
         };
 
-        subject.StartDragging("Bar", new MouseEventArgs() { PageY = 123 });
+        subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
+
+        await subject.StartDragging("Bar", new MouseEventArgs() { PageY = 123 });
 
         Assert.Equal(1, subject.DraggingItemIndex);
         Assert.Equal(123, subject.StartY);
+        Assert.Equal([25, 35, 45], subject.Heights);
     }
 
     [Fact]

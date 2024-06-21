@@ -21,7 +21,25 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal List<double> Heights { get; set; } = new();
     internal int NewItemIndex {
         get {
-            return -1;
+            if (DraggingItemIndex == -1) {
+                return -1;
+            }
+
+            var index = DraggingItemIndex;
+            var deltaY = DeltaY;
+
+            if (deltaY < 0) {
+                while (index > 0 && deltaY < -Heights[index - 1] / 2) {
+                    deltaY += Heights[--index];
+                }
+            }
+            else {
+                while (index < Heights.Count - 1 && deltaY > Heights[index + 1] / 2) {
+                    deltaY -= Heights[++index];
+                }
+            }
+
+            return index;
         }
     }
 

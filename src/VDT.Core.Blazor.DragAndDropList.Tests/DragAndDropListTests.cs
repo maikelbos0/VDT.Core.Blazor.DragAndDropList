@@ -45,6 +45,34 @@ public class DragAndDropListTests {
         Assert.Equal(-400, subject.DeltaY);
     }
 
+    [Theory]
+    [InlineData(-1, 100, -1)]
+    [InlineData(2, 0, 2)]
+    [InlineData(2, -25, 2)]
+    [InlineData(2, -26, 1)]
+    [InlineData(2, -65, 1)]
+    [InlineData(2, -66, 0)]
+    [InlineData(2, 15, 2)]
+    [InlineData(2, 16, 3)]
+    [InlineData(2, 55, 3)]
+    [InlineData(2, 56, 4)]
+    [InlineData(3, -35, 3)]
+    [InlineData(3, -36, 2)]
+    [InlineData(3, 25, 3)]
+    [InlineData(3, 26, 4)]
+    [InlineData(0, -100, 0)]
+    [InlineData(5, 100, 5)]
+    public void NewItemIndex(int draggingItemIndex, double deltaY, int expectedNewItemIndex) {
+        var subject = new DragAndDropList<string>() {
+            Heights = [30, 50, 70, 30, 50, 70],
+            DraggingItemIndex = draggingItemIndex,
+            StartY = 0,
+            CurrentY = deltaY
+        };
+
+        Assert.Equal(expectedNewItemIndex, subject.NewItemIndex);
+    }
+
     [Fact]
     public async Task StartDragging() {
         var subject = new DragAndDropList<string>() {

@@ -65,7 +65,7 @@ public class DragAndDropListTests {
     public void NewItemIndex(int draggingItemIndex, double deltaY, int expectedNewItemIndex) {
         var subject = new DragAndDropList<string>() {
             Heights = [30, 50, 70, 30, 50, 70],
-            DraggingItemIndex = draggingItemIndex,
+            OriginalItemIndex = draggingItemIndex,
             StartY = 0,
             CurrentY = deltaY
         };
@@ -84,7 +84,7 @@ public class DragAndDropListTests {
 
         await subject.StartDragging("Bar", new MouseEventArgs() { PageY = 123 });
 
-        Assert.Equal(1, subject.DraggingItemIndex);
+        Assert.Equal(1, subject.OriginalItemIndex);
         Assert.Equal(123, subject.StartY);
         Assert.Equal([25, 35, 45], subject.Heights);
     }
@@ -92,7 +92,7 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag() {
         var subject = new DragAndDropList<string>() {
-            DraggingItemIndex = 1
+            OriginalItemIndex = 1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 234 });
@@ -103,7 +103,7 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag_Without_DraggingItemIndex() {
         var subject = new DragAndDropList<string>() {
-            DraggingItemIndex = -1
+            OriginalItemIndex = -1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 234 });
@@ -114,14 +114,14 @@ public class DragAndDropListTests {
     [Fact]
     public void StopDragging() {
         var subject = new DragAndDropList<string>() {
-            DraggingItemIndex = 1,
+            OriginalItemIndex = 1,
             StartY = 700,
             CurrentY = 300
         };
 
         subject.StopDragging(new MouseEventArgs() { PageY = 234 });
 
-        Assert.Equal(-1, subject.DraggingItemIndex);
+        Assert.Equal(-1, subject.OriginalItemIndex);
         Assert.Equal(0, subject.StartY);
         Assert.Equal(0, subject.CurrentY);
     }

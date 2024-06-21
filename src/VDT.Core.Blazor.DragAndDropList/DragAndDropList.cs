@@ -17,15 +17,15 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double StartY { get; set; } = 0;
     internal double CurrentY { get; set; } = 0;
     internal double DeltaY => CurrentY - StartY;
-    internal int DraggingItemIndex { get; set; } = -1;
+    internal int OriginalItemIndex { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
     internal int NewItemIndex {
         get {
-            if (DraggingItemIndex == -1) {
+            if (OriginalItemIndex == -1) {
                 return -1;
             }
 
-            var index = DraggingItemIndex;
+            var index = OriginalItemIndex;
             var deltaY = DeltaY;
 
             if (deltaY < 0) {
@@ -84,27 +84,26 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     }
 
     internal async Task StartDragging(TItem itemToDrag, MouseEventArgs args) {
-        DraggingItemIndex = Items.IndexOf(itemToDrag);
+        OriginalItemIndex = Items.IndexOf(itemToDrag);
         StartY = args.PageY;
         Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
         Console.WriteLine(string.Join(',', Heights));
     }
 
     internal void Drag(MouseEventArgs args) {
-        if (DraggingItemIndex != -1) {
+        if (OriginalItemIndex != -1) {
             CurrentY = args.PageY;
-            Console.WriteLine(CurrentY);
         }
     }
 
     internal void StopDragging(MouseEventArgs args) {
-        if (DraggingItemIndex != -1) {
+        if (OriginalItemIndex != -1) {
             CurrentY = args.PageY;
             Console.WriteLine("Done");
 
             // TODO event?
 
-            DraggingItemIndex = -1;
+            OriginalItemIndex = -1;
             StartY = 0;
             CurrentY = 0;
         }

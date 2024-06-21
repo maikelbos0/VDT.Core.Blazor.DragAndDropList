@@ -16,6 +16,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
     internal double StartY { get; set; } = 0;
     internal double CurrentY { get; set; } = 0;
+    internal double DeltaY => CurrentY - StartY;
     internal int DraggingItemIndex { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
     internal IJSObjectReference ModuleReference {

@@ -36,6 +36,16 @@ public class DragAndDropListTests {
     }
 
     [Fact]
+    public void DeltaY() {
+        var subject = new DragAndDropList<string>() {
+            StartY = 700,
+            CurrentY = 300
+        };
+
+        Assert.Equal(-400, subject.DeltaY);
+    }
+
+    [Fact]
     public async Task StartDragging() {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz"],

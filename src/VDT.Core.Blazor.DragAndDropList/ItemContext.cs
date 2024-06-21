@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;
 
@@ -12,7 +13,6 @@ public class ItemContext<TItem> {
         Item = item;
     }
 
-    public void StartDragging(MouseEventArgs args) {
-        dragAndDropList.StartDragging(this.Item, args);
-    }
+    public Task StartDragging(MouseEventArgs args)
+        => dragAndDropList.StartDragging(Item, args);
 }

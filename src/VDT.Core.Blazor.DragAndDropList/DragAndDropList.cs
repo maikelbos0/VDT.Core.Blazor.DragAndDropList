@@ -19,6 +19,12 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double DeltaY => CurrentY - StartY;
     internal int DraggingItemIndex { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
+    internal int NewItemIndex {
+        get {
+            return -1;
+        }
+    }
+
     internal IJSObjectReference ModuleReference {
         get => moduleReference ?? throw new InvalidOperationException($"{nameof(ModuleReference)} is only available after the list has rendered");
         set => moduleReference = value;
@@ -75,8 +81,14 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
     internal void StopDragging(MouseEventArgs args) {
         if (DraggingItemIndex != -1) {
-            DraggingItemIndex = -1;
+            CurrentY = args.PageY;
             Console.WriteLine("Done");
+
+            // TODO event?
+
+            DraggingItemIndex = -1;
+            StartY = 0;
+            CurrentY = 0;
         }
     }
 

@@ -64,7 +64,6 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag() {
         var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz"],
             DraggingItemIndex = 1
         };
 
@@ -76,12 +75,26 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag_Without_DraggingItemIndex() {
         var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz"],
             DraggingItemIndex = -1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 234 });
 
+        Assert.Equal(0, subject.CurrentY);
+    }
+
+    [Fact]
+    public void StopDragging() {
+        var subject = new DragAndDropList<string>() {
+            DraggingItemIndex = 1,
+            StartY = 700,
+            CurrentY = 300
+        };
+
+        subject.StopDragging(new MouseEventArgs() { PageY = 234 });
+
+        Assert.Equal(-1, subject.DraggingItemIndex);
+        Assert.Equal(0, subject.StartY);
         Assert.Equal(0, subject.CurrentY);
     }
 }

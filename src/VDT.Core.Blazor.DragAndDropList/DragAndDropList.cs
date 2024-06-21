@@ -52,6 +52,8 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
     [Parameter] public List<TItem> Items { get; set; } = new();
 
+    [Parameter] public EventCallback<DropItemEventArgs<TItem>> OnDropItem { get; set; }
+
     [Parameter] public RenderFragment<ItemContext<TItem>> ItemTemplate { get; set; } = itemContext => builder => { };
 
     /// <inheritdoc/>
@@ -87,7 +89,6 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         OriginalItemIndex = Items.IndexOf(itemToDrag);
         StartY = args.PageY;
         Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
-        Console.WriteLine(string.Join(',', Heights));
     }
 
     internal void Drag(MouseEventArgs args) {
@@ -96,16 +97,25 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
     }
 
-    internal void StopDragging(MouseEventArgs args) {
+    internal async Task StopDragging(MouseEventArgs args) {
         if (OriginalItemIndex != -1) {
             CurrentY = args.PageY;
-            Console.WriteLine("Done");
 
-            // TODO event?
+            var dropEventArgs = new DropItemEventArgs<TItem>() {
+                OriginalItemIndex = OriginalItemIndex,
+                NewItemIndex = NewItemIndex,
+                ReorderedItems = new List<TItem>(Items)
+            };
+            var item = dropEventArgs.ReorderedItems[OriginalItemIndex];
+
+            dropEventArgs.ReorderedItems.RemoveAt(OriginalItemIndex);
+            dropEventArgs.ReorderedItems.Insert(NewItemIndex, item);
 
             OriginalItemIndex = -1;
             StartY = 0;
             CurrentY = 0;
+
+            await OnDropItem.InvokeAsync(dropEventArgs);
         }
     }
 

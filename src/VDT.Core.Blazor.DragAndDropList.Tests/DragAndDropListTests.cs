@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using NSubstitute;
 using System.Collections.Generic;
@@ -112,17 +113,26 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public void StopDragging() {
+    public async Task StopDragging() {
+        DropItemEventArgs<string>? receivedArgs = null;
         var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
             OriginalItemIndex = 1,
-            StartY = 700,
-            CurrentY = 300
+            StartY = 100,
+            CurrentY = 300,
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
         };
 
-        subject.StopDragging(new MouseEventArgs() { PageY = 234 });
+        await subject.StopDragging(new MouseEventArgs() { PageY = 200 });
 
         Assert.Equal(-1, subject.OriginalItemIndex);
         Assert.Equal(0, subject.StartY);
         Assert.Equal(0, subject.CurrentY);
+
+        Assert.NotNull(receivedArgs);
+        Assert.Equal(1, receivedArgs.OriginalItemIndex);
+        Assert.Equal(2, receivedArgs.NewItemIndex);
+        Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
     }
 }

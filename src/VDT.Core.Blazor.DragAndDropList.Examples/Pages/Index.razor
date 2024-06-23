@@ -4,7 +4,7 @@
 
 <p>TODO</p>
 
-<DragAndDropList Items="Items">
+<DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
     <ItemTemplate>
         <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center" style="height: @(context.Item.Height)px">
             <div class="overflow-hidden">
@@ -22,4 +22,8 @@
     private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}", 90 + Random.Shared.Next(0, 3) * 20)).ToList();
 
     private record Item(Guid Id, string Text, int Height);
+
+    private void ItemDropped(DropItemEventArgs<Item> args) {
+        Items = args.ReorderedItems;
+    }
 }

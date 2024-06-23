@@ -89,6 +89,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal async Task StartDragging(TItem itemToDrag, MouseEventArgs args) {
         OriginalItemIndex = Items.IndexOf(itemToDrag);
         StartY = args.PageY;
+        CurrentY = args.PageY;
         Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
     }
 

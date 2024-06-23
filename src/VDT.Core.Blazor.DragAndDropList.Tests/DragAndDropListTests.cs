@@ -87,6 +87,7 @@ public class DragAndDropListTests {
 
         Assert.Equal(1, subject.OriginalItemIndex);
         Assert.Equal(123, subject.StartY);
+        Assert.Equal(123, subject.CurrentY);
         Assert.Equal([25, 35, 45], subject.Heights);
     }
 
@@ -120,7 +121,7 @@ public class DragAndDropListTests {
             Heights = [100, 100, 100, 100],
             OriginalItemIndex = 1,
             StartY = 100,
-            CurrentY = 300,
+            CurrentY = 340,
             OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
         };
 

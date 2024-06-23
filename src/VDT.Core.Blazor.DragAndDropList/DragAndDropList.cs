@@ -52,6 +52,8 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
     [Parameter] public List<TItem> Items { get; set; } = new();
 
+    [Parameter] public Func<TItem, object?> KeySelector { get; set; } = item => item;
+
     [Parameter] public EventCallback<DropItemEventArgs<TItem>> OnDropItem { get; set; }
 
     [Parameter] public RenderFragment<ItemContext<TItem>> ItemTemplate { get; set; } = itemContext => builder => { };
@@ -72,7 +74,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         builder.OpenRegion(5);
         for (var i = 0; i < Items.Count; i++) {
             builder.OpenElement(6, "div");
-            builder.AddAttribute(6, "class", "drag-and-drop-list-item");
+            builder.SetKey(KeySelector(Items[i]));
             builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item-active" : "drag-and-drop-list-item");
             builder.AddAttribute(8, "style", GetStyle(i));
             builder.AddContent(9, ItemTemplate(new ItemContext<TItem>(this, Items[i])));

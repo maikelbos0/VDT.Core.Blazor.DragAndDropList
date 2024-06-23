@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;
 
+/// <summary>
+/// Component for lists that allow reordering using drag and drop
+/// </summary>
+/// <typeparam name="TItem">Type of list item</typeparam>
 public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal const string ModuleLocation = "./_content/VDT.Core.Blazor.DragAndDropList/draganddroplist.31d575906d.js";
 
@@ -50,12 +54,24 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
     [Inject] internal IJSRuntime JSRuntime { get; set; } = null!;
 
+    /// <summary>
+    /// Gets or sets the items in the list
+    /// </summary>
     [Parameter] public List<TItem> Items { get; set; } = new();
 
+    /// <summary>
+    /// Gets or sets the method for selecting unique keys for the items in the list; defaults to selecting the items themselves
+    /// </summary>
     [Parameter] public Func<TItem, object?> KeySelector { get; set; } = item => item;
 
+    /// <summary>
+    /// Gets or sets the callback that will be invoked when an item is dropped after dragging
+    /// </summary>
     [Parameter] public EventCallback<DropItemEventArgs<TItem>> OnDropItem { get; set; }
 
+    /// <summary>
+    /// Gets or sets the layout template for rendering an item
+    /// </summary>
     [Parameter] public RenderFragment<ItemContext<TItem>> ItemTemplate { get; set; } = itemContext => builder => { };
 
     /// <inheritdoc/>
@@ -65,6 +81,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
     }
 
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
         builder.AddAttribute(2, "class", "drag-and-drop-list");

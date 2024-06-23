@@ -69,17 +69,18 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         builder.AddElementReferenceCapture(3, containerReference => this.containerReference = containerReference);
 
         builder.OpenRegion(4);
-        foreach (var item in Items) {
+        for (var i = 0; i < Items.Count; i++) {
             builder.OpenElement(5, "div");
             builder.AddAttribute(6, "class", "drag-and-drop-list-item");
-            builder.AddContent(7, ItemTemplate(new ItemContext<TItem>(this, item)));
+            builder.AddAttribute(7, "style", GetStyle(i));
+            builder.AddContent(8, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
             builder.CloseElement();
         }
         builder.CloseRegion();
 
-        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(8);
-        builder.AddAttribute(9, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
-        builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(9);
+        builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
+        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
@@ -117,6 +118,28 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
             await OnDropItem.InvokeAsync(dropEventArgs);
         }
+    }
+
+    internal string GetStyle(int itemIndex) {
+        if (OriginalItemIndex == -1 || DeltaY == 0) {
+            return "";
+        }
+
+        if (itemIndex == OriginalItemIndex) {
+            return $"z-index: 1000; margin-top: {DeltaY}px; margin-bottom: {-DeltaY}px";
+        }
+
+        var newItemIndex = NewItemIndex;
+
+        if (OriginalItemIndex < newItemIndex && OriginalItemIndex < itemIndex && newItemIndex >= itemIndex) {
+            return $"margin-top: {-Heights[OriginalItemIndex]}px; margin-bottom: {Heights[OriginalItemIndex]}px";
+        }
+
+        if (OriginalItemIndex > newItemIndex && OriginalItemIndex > itemIndex && newItemIndex <= itemIndex) {
+            return $"margin-top: {Heights[OriginalItemIndex]}px; margin-bottom: {-Heights[OriginalItemIndex]}px";
+        }
+
+        return "";
     }
 
     /// <inheritdoc/>

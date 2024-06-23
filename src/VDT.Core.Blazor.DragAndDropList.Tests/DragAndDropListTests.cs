@@ -135,4 +135,48 @@ public class DragAndDropListTests {
         Assert.Equal(2, receivedArgs.NewItemIndex);
         Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
     }
+
+    [Theory]
+    [InlineData(0, "")]
+    [InlineData(1, "z-index: 1000; margin-top: 240px; margin-bottom: -240px")]
+    [InlineData(2, "margin-top: -100px; margin-bottom: 100px")]
+    [InlineData(3, "margin-top: -100px; margin-bottom: 100px")]
+    [InlineData(4, "")]
+    public void GetStyle(int itemIndex, string expectedStyle) {
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
+            Heights = [90, 100, 110, 110, 110],
+            OriginalItemIndex = 1,
+            StartY = 100,
+            CurrentY = 340
+        };
+
+        Assert.Equal(expectedStyle, subject.GetStyle(itemIndex));
+    }
+
+    [Fact]
+    public void GetStyle_Without_OriginalItemIndex() {
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = -1,
+            StartY = 100,
+            CurrentY = 340
+        };
+
+        Assert.Equal("", subject.GetStyle(2));
+    }
+
+    [Fact]
+    public void GetStyle_Without_Delta() {
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = 1,
+            StartY = 100,
+            CurrentY = 100
+        };
+
+        Assert.Equal("", subject.GetStyle(2));
+    }
 }

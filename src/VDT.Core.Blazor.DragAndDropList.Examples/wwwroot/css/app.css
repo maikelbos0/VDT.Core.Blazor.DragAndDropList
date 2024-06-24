@@ -17,11 +17,3 @@
     right: 0.75rem;
     top: 0.5rem;
 }
-
-.drag-and-drop-list-item-active > div {
-    box-shadow: 0 0 0.75rem #dee2e6;
-}
-
-.drag-and-drop-list-item:not(.drag-and-drop-list-item-active) {
-    transition: margin 0.4s ease-in-out;
-}

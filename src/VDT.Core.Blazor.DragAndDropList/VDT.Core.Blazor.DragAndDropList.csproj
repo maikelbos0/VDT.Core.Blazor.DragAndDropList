@@ -15,7 +15,7 @@
 		<Authors>Maikel Bos</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Copyright © 2024 Maikel Bos</Copyright>
-		<PackageTags>TODO</PackageTags>
+		<PackageTags>drag drop dragging dropping list component order sort reorder sorting ordering</PackageTags>
 		<PackageProjectUrl>https://github.com/maikelbos0/VDT.Core.Blazor.DragAndDropList</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -48,6 +48,10 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="3.2.0" />
 	</ItemGroup>
 
 </Project>

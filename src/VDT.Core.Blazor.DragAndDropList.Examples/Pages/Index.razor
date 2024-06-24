@@ -2,4 +2,47 @@
 
 <h1>Home</h1>
 
-<p>TODO</p>
+<p>Blazor component that allows users to reorder items in a list by dragging and dropping.</p>
+
+<p>To use this components, there are two steps that must be taken.</p>
+
+<ul>
+    <li>
+        Inside the item template, there needs to be an element that has an <code>@@onmousedown</code> event callback to <code>context.StartDragging</code>,
+        passing the <code>MouseEventArgs</code>, to start the dragging action
+    </li>
+    <li>
+        When the dragging item is dropped, the component <code>OnDropItem</code> event is triggered which provides an object of type 
+        <code>DropItemEventArgs&lt;TItem&gt;</code>; subscribe to this event to handle the reordering of your list
+    </li>
+</ul>
+
+<p>
+    Please note that reordering must be done in client code since the component should not change its input property <code>Items</code>. To handle reordering
+    you can either perform manual switching using the <code>OriginalItemIndex</code> and <code>NewItemIndex</code> properties of the event arguments parameter,
+    or use the <code>ReorderedItems</code> property which contains the reordered list.
+</p>
+
+<DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
+    <ItemTemplate>
+        <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
+            <div class="overflow-hidden">
+                <h5 class="text-truncate">@context.Item.Text</h5>
+                <div class="text-muted text-truncate">@context.Item.Id</div>
+            </div>
+            <div>
+                <button class="btn btn-primary"><span>&varr;</span><span class="ps-2 d-none d-lg-inline" @onmousedown="context.StartDragging">Move</span></button>
+            </div>
+        </div>
+    </ItemTemplate>
+</DragAndDropList>
+
+@code {
+    private record Item(Guid Id, string Text);
+
+    private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}")).ToList();
+
+    private void ItemDropped(DropItemEventArgs<Item> args) {
+        Items = args.ReorderedItems;
+    }
+}

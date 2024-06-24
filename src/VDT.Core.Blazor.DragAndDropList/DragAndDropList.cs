@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace VDT.Core.Blazor.DragAndDropList;
 
 /// <summary>
-/// Component for lists that allow reordering using drag and drop
+/// List component that allows reordering using drag and drop
 /// </summary>
 /// <typeparam name="TItem">Type of list item</typeparam>
 public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {

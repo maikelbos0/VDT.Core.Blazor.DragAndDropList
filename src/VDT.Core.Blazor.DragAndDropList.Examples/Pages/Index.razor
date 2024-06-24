@@ -9,10 +9,10 @@
 <ul>
     <li>
         Inside the item template, there needs to be an element that has an <code>@@onmousedown</code> event callback to <code>context.StartDragging</code>,
-        passing the <code>MouseEventArgs</code>
+        passing the <code>MouseEventArgs</code>, to start the dragging action
     </li>
     <li>
-        When the dragging item is dropped, the component <code>OnDropItem</code> is triggered which provides an object of type 
+        When the dragging item is dropped, the component <code>OnDropItem</code> event is triggered which provides an object of type 
         <code>DropItemEventArgs&lt;TItem&gt;</code>; subscribe to this event to handle the reordering of your list
     </li>
 </ul>
@@ -25,7 +25,7 @@
 
 <DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
     <ItemTemplate>
-        <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center" style="height: @(context.Item.Height)px">
+        <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
             <div class="overflow-hidden">
                 <h5 class="text-truncate">@context.Item.Text</h5>
                 <div class="text-muted text-truncate">@context.Item.Id</div>
@@ -38,9 +38,9 @@
 </DragAndDropList>
 
 @code {
-    private record Item(Guid Id, string Text, int Height);
+    private record Item(Guid Id, string Text);
 
-    private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}", 90 + Random.Shared.Next(0, 3) * 20)).ToList();
+    private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}")).ToList();
 
     private void ItemDropped(DropItemEventArgs<Item> args) {
         Items = args.ReorderedItems;

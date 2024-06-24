@@ -11,9 +11,10 @@ Blazor component that allows users to reorder items in a list by dragging and dr
 
 To use this components, there are two steps that must be taken.
 
-- Inside the item template, there needs to be an element that has an `@onmousedown` event callback to `context.StartDragging`, passing the `MouseEventArgs`
-- When the dragging item is dropped, the component `OnDropItem` is triggered which provides an object of type `DropItemEventArgs<TItem>`; subscribe to this
-  event to handle the reordering of your list
+- Inside the item template, there needs to be an element that has an `@onmousedown` event callback to `context.StartDragging`, passing the `MouseEventArgs`,
+  to start the dragging action
+- When the dragging item is dropped, the component `OnDropItem` event is triggered which provides an object of type `DropItemEventArgs<TItem>`; subscribe to
+  this event to handle the reordering of your list
 
 Please note that reordering must be done in client code since the component should not change its input property `Items`. To handle reordering you can either
 perform manual switching using the `OriginalItemIndex` and `NewItemIndex` properties of the event arguments parameter, or use the `ReorderedItems` property
@@ -24,7 +25,7 @@ which contains the reordered list.
 ```
 <DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
     <ItemTemplate>
-        <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center" style="height: @(context.Item.Height)px">
+        <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
             <div class="overflow-hidden">
                 <h5 class="text-truncate">@context.Item.Text</h5>
                 <div class="text-muted text-truncate">@context.Item.Id</div>
@@ -37,15 +38,14 @@ which contains the reordered list.
 </DragAndDropList>
 
 @code {
-    private record Item(Guid Id, string Text, int Height);
+    private record Item(Guid Id, string Text);
 
-    private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}", 90 + Random.Shared.Next(0, 3) * 20)).ToList();
+    private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}")).ToList();
 
     private void ItemDropped(DropItemEventArgs<Item> args) {
         Items = args.ReorderedItems;
     }
 }
-
 ```
 
 ## Style
@@ -55,7 +55,7 @@ items. Further styles can be applied either directly on the item layout template
 
 - `drag-and-drop-list` for the list container
 - `drag-and-drop-list-item` for each list item
-- `drag-and-drop-list-item-active` for the list item that is current active (being dragged)
+- `drag-and-drop-list-item-active` for the list item that is currently being dragged
 
 ### Example
 

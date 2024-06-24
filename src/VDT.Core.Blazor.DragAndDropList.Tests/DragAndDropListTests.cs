@@ -103,7 +103,7 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public void Drag_Without_DraggingItemIndex() {
+    public void Drag_Without_OriginalItemIndex() {
         var subject = new DragAndDropList<string>() {
             OriginalItemIndex = -1
         };
@@ -135,6 +135,20 @@ public class DragAndDropListTests {
         Assert.Equal(1, receivedArgs.OriginalItemIndex);
         Assert.Equal(2, receivedArgs.NewItemIndex);
         Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
+    }
+
+    [Fact]
+    public async Task StopDragging_Without_OriginalItemIndex() {
+        DropItemEventArgs<string>? receivedArgs = null;
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
+        };
+
+        await subject.StopDragging(new MouseEventArgs() { PageY = 200 });
+
+        Assert.Null(receivedArgs);
     }
 
     [Theory]

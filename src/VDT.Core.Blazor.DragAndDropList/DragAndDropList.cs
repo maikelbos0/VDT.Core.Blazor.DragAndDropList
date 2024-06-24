@@ -92,7 +92,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         for (var i = 0; i < Items.Count; i++) {
             builder.OpenElement(6, "div");
             builder.SetKey(KeySelector(Items[i]));
-            builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item-active" : "drag-and-drop-list-item");
+            builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
             builder.AddAttribute(8, "style", GetStyle(i));
             builder.AddContent(9, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
             builder.CloseElement();

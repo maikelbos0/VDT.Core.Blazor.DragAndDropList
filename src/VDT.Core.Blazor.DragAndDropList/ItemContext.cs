@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;

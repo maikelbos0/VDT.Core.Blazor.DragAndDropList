@@ -23,7 +23,7 @@ which contains the reordered list.
 ### Example
 
 ```
-<DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
+<DragAndDropList TItem="Item" Items="Items" OnDropItem="ItemDropped">
     <ItemTemplate>
         <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
             <div class="overflow-hidden">
@@ -31,7 +31,7 @@ which contains the reordered list.
                 <div class="text-muted text-truncate">@context.Item.Id</div>
             </div>
             <div>
-                <button class="btn btn-primary"><span>&varr;</span><span class="ps-2 d-none d-lg-inline" @onmousedown="context.StartDragging">Move</span></button>
+                <button class="btn btn-primary" @onmousedown="context.StartDragging"><span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span></button>
             </div>
         </div>
     </ItemTemplate>
@@ -67,7 +67,8 @@ items. Further styles can be applied either directly on the item layout template
 
 /* Create smooth switching animations */
 .drag-and-drop-list-item:not(.drag-and-drop-list-item-active) {
-    transition: margin 0.4s ease-in-out;
+    position: relative;
+    top: 0;
+    transition: top 0.4s ease-in-out;
 }
-
 ```

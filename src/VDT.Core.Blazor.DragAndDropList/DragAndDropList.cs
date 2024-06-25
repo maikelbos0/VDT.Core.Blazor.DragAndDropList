@@ -85,23 +85,22 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
         builder.AddAttribute(2, "class", "drag-and-drop-list");
-        builder.AddAttribute(3, "style", "display: flex; flex-direction: column");
-        builder.AddElementReferenceCapture(4, containerReference => this.containerReference = containerReference);
+        builder.AddElementReferenceCapture(3, containerReference => this.containerReference = containerReference);
 
-        builder.OpenRegion(5);
+        builder.OpenRegion(4);
         for (var i = 0; i < Items.Count; i++) {
-            builder.OpenElement(6, "div");
+            builder.OpenElement(5, "div");
             builder.SetKey(KeySelector(Items[i]));
-            builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
-            builder.AddAttribute(8, "style", GetStyle(i));
-            builder.AddContent(9, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
+            builder.AddAttribute(6, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
+            builder.AddAttribute(7, "style", GetStyle(i));
+            builder.AddContent(8, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
             builder.CloseElement();
         }
         builder.CloseRegion();
 
-        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(10);
-        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
-        builder.AddAttribute(12, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(9);
+        builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
+        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
@@ -148,17 +147,17 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
 
         if (itemIndex == OriginalItemIndex) {
-            return $"z-index: 1000; margin-top: {DeltaY}px; margin-bottom: {-DeltaY}px";
+            return FormattableString.Invariant($"z-index: 1000; position: relative; top: {DeltaY}px");
         }
 
         var newItemIndex = NewItemIndex;
 
         if (OriginalItemIndex < newItemIndex && OriginalItemIndex < itemIndex && newItemIndex >= itemIndex) {
-            return $"margin-top: {-Heights[OriginalItemIndex]}px; margin-bottom: {Heights[OriginalItemIndex]}px";
+            return FormattableString.Invariant($"position: relative; top: {-Heights[OriginalItemIndex]}px");
         }
 
         if (OriginalItemIndex > newItemIndex && OriginalItemIndex > itemIndex && newItemIndex <= itemIndex) {
-            return $"margin-top: {Heights[OriginalItemIndex]}px; margin-bottom: {-Heights[OriginalItemIndex]}px";
+            return FormattableString.Invariant($"position: relative; top: {Heights[OriginalItemIndex]}px");
         }
 
         return "";

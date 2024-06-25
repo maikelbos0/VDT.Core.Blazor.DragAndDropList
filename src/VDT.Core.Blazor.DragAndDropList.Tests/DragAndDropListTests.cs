@@ -153,9 +153,9 @@ public class DragAndDropListTests {
 
     [Theory]
     [InlineData(0, "")]
-    [InlineData(1, "z-index: 1000; margin-top: 240px; margin-bottom: -240px")]
-    [InlineData(2, "margin-top: -100px; margin-bottom: 100px")]
-    [InlineData(3, "margin-top: -100px; margin-bottom: 100px")]
+    [InlineData(1, "z-index: 1000; position: relative; top: 240px")]
+    [InlineData(2, "position: relative; top: -100px")]
+    [InlineData(3, "position: relative; top: -100px")]
     [InlineData(4, "")]
     public void GetStyle(int itemIndex, string expectedStyle) {
         var subject = new DragAndDropList<string>() {

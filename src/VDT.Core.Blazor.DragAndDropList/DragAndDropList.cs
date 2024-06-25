@@ -147,17 +147,17 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
 
         if (itemIndex == OriginalItemIndex) {
-            return $"z-index: 1000; position: relative; top: {DeltaY}px";
+            return FormattableString.Invariant($"z-index: 1000; position: relative; top: {DeltaY}px");
         }
 
         var newItemIndex = NewItemIndex;
 
         if (OriginalItemIndex < newItemIndex && OriginalItemIndex < itemIndex && newItemIndex >= itemIndex) {
-            return $"position: relative; top: {-Heights[OriginalItemIndex]}px";
+            return FormattableString.Invariant($"position: relative; top: {-Heights[OriginalItemIndex]}px");
         }
 
         if (OriginalItemIndex > newItemIndex && OriginalItemIndex > itemIndex && newItemIndex <= itemIndex) {
-            return $"position: relative; top: {Heights[OriginalItemIndex]}px";
+            return FormattableString.Invariant($"position: relative; top: {Heights[OriginalItemIndex]}px");
         }
 
         return "";

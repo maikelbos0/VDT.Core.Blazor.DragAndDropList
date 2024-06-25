@@ -85,7 +85,6 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
         builder.AddAttribute(2, "class", "drag-and-drop-list");
-        builder.AddAttribute(3, "style", "display: flex; flex-direction: column");
         builder.AddElementReferenceCapture(4, containerReference => this.containerReference = containerReference);
 
         builder.OpenRegion(5);
@@ -148,17 +147,17 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
 
         if (itemIndex == OriginalItemIndex) {
-            return $"z-index: 1000; margin-top: {DeltaY}px; margin-bottom: {-DeltaY}px";
+            return $"z-index: 1000; position: relative; top: {DeltaY}px";
         }
 
         var newItemIndex = NewItemIndex;
 
         if (OriginalItemIndex < newItemIndex && OriginalItemIndex < itemIndex && newItemIndex >= itemIndex) {
-            return $"margin-top: {-Heights[OriginalItemIndex]}px; margin-bottom: {Heights[OriginalItemIndex]}px";
+            return $"position: relative; top: {-Heights[OriginalItemIndex]}px";
         }
 
         if (OriginalItemIndex > newItemIndex && OriginalItemIndex > itemIndex && newItemIndex <= itemIndex) {
-            return $"margin-top: {Heights[OriginalItemIndex]}px; margin-bottom: {-Heights[OriginalItemIndex]}px";
+            return $"position: relative; top: {Heights[OriginalItemIndex]}px";
         }
 
         return "";

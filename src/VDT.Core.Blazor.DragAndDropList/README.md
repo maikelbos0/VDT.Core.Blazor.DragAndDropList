@@ -23,7 +23,7 @@ which contains the reordered list.
 ### Example
 
 ```
-<DragAndDropList Items="Items" OnDropItem="(DropItemEventArgs<Item> args) => ItemDropped(args)">
+<DragAndDropList TItem="Item" Items="Items" OnDropItem="ItemDropped">
     <ItemTemplate>
         <div class="mt-3 p-3 bg-light border rounded d-flex justify-content-between align-items-center">
             <div class="overflow-hidden">

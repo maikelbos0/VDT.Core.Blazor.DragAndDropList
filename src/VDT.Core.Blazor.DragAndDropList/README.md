@@ -67,8 +67,8 @@ items. Further styles can be applied either directly on the item layout template
 
 /* Create smooth switching animations */
 .drag-and-drop-list-item:not(.drag-and-drop-list-item-active) {
+    position: relative;
     top: 0;
     transition: top 0.4s ease-in-out;
 }
-
 ```

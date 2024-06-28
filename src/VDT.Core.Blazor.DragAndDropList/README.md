@@ -30,9 +30,9 @@ which contains the reordered list.
                 <h5 class="text-truncate">@context.Item.Text</h5>
                 <div class="text-muted text-truncate">@context.Item.Id</div>
             </div>
-            <div>
-                <button class="btn btn-primary" @onmousedown="context.StartDragging"><span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span></button>
-            </div>
+            <button class="btn btn-primary" @onmousedown="context.StartDragging" @ontouchstart="context.StartDragging">
+                <span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span>
+            </button>
         </div>
     </ItemTemplate>
 </DragAndDropList>

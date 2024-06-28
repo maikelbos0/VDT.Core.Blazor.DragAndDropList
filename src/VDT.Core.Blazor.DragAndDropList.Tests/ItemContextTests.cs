@@ -21,14 +21,14 @@ public class ItemContextTests {
         await subject.StartDragging(new MouseEventArgs() { PageY = 123 });
 
         Assert.Equal(1, list.OriginalItemIndex);
-        Assert.Equal(-1, list.TouchIdentifier);
+        Assert.Equal(-1, list.CurrentTouchIdentifier);
         Assert.Equal(123, list.StartY);
         Assert.Equal(123, list.CurrentY);
         Assert.Equal([25, 35, 45], list.Heights);
     }
 
     [Fact]
-    public async Task StartDragging() {
+    public async Task StartDragging_TouchEventArgs() {
         var list = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz"],
             ModuleReference = Substitute.For<IJSObjectReference>()
@@ -45,7 +45,7 @@ public class ItemContextTests {
         });
 
         Assert.Equal(1, list.OriginalItemIndex);
-        Assert.Equal(1, list.TouchIdentifier);
+        Assert.Equal(1, list.CurrentTouchIdentifier);
         Assert.Equal(123, list.StartY);
         Assert.Equal(123, list.CurrentY);
         Assert.Equal([25, 35, 45], list.Heights);

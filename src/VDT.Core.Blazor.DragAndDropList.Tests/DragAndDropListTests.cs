@@ -86,14 +86,14 @@ public class DragAndDropListTests {
         await subject.StartDragging("Bar", 123, 1);
 
         Assert.Equal(1, subject.OriginalItemIndex);
-        Assert.Equal(1, subject.TouchIdentifier);
+        Assert.Equal(1, subject.CurrentTouchIdentifier);
         Assert.Equal(123, subject.StartY);
         Assert.Equal(123, subject.CurrentY);
         Assert.Equal([25, 35, 45], subject.Heights);
     }
 
     [Fact]
-    public void Drag() {
+    public void Drag_MouseEventArgs() {
         var subject = new DragAndDropList<string>() {
             OriginalItemIndex = 1
         };
@@ -104,12 +104,74 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public void Drag_Without_OriginalItemIndex() {
+    public void Drag_MouseEventArgs_With_Current_Touch() {
+        var subject = new DragAndDropList<string>() {
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = 2
+        };
+
+        subject.Drag(new MouseEventArgs() { PageY = 234 });
+
+        Assert.Equal(0, subject.CurrentY);
+    }
+
+    [Fact]
+    public void Drag_MouseEventArgs_Without_OriginalItemIndex() {
         var subject = new DragAndDropList<string>() {
             OriginalItemIndex = -1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 234 });
+
+        Assert.Equal(0, subject.CurrentY);
+    }
+
+    [Fact]
+    public void Drag_TouchEventArgs() {
+        var subject = new DragAndDropList<string>() {
+            OriginalItemIndex = 1,
+            CurrentTouchIdentifier = 2
+        };
+
+        subject.Drag(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 123, Identifier = 1 },
+                new TouchPoint() { PageY = 234, Identifier = 2 }
+            ]
+        });
+
+        Assert.Equal(234, subject.CurrentY);
+    }
+
+    [Fact]
+    public void Drag_TouchEventArgs_Without_Current_Touch() {
+        var subject = new DragAndDropList<string>() {
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = -1
+        };
+
+        subject.Drag(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 123, Identifier = 1 },
+                new TouchPoint() { PageY = 234, Identifier = 2 }
+            ]
+        });
+
+        Assert.Equal(0, subject.CurrentY);
+    }
+
+    [Fact]
+    public void Drag_TouchEventArgs_Without_OriginalItemIndex() {
+        var subject = new DragAndDropList<string>() {
+            OriginalItemIndex = -1
+        };
+
+        subject.Drag(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 123, Identifier = 1 },
+                new TouchPoint() { PageY = 234, Identifier = 2 }
+            ]
+        });
 
         Assert.Equal(0, subject.CurrentY);
     }

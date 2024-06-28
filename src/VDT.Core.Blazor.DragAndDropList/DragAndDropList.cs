@@ -23,7 +23,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double CurrentY { get; set; } = 0;
     internal double DeltaY => CurrentY - StartY;
     internal int OriginalItemIndex { get; set; } = -1;
-    internal long TouchIdentifier { get; set; } = -1;
+    internal long CurrentTouchIdentifier { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
     internal int NewItemIndex {
         get {
@@ -102,7 +102,8 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
         builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(9);
         builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
-        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnTouchMove), EventCallback.Factory.Create<TouchEventArgs>(this, Drag));
+        builder.AddAttribute(12, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
@@ -111,16 +112,26 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal async Task StartDragging(TItem itemToDrag, double pageY, long touchIdentifier = -1) {
         if (OriginalItemIndex == -1) {
             OriginalItemIndex = Items.IndexOf(itemToDrag);
-            TouchIdentifier = touchIdentifier;
+            CurrentTouchIdentifier = touchIdentifier;
             StartY = pageY;
             CurrentY = pageY;
             Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
         }
     }
 
-    internal void Drag(MouseEventArgs args) {
-        if (OriginalItemIndex != -1) {
-            CurrentY = args.PageY;
+    internal void Drag(MouseEventArgs args) => Drag(args.PageY);
+
+    internal void Drag(TouchEventArgs args) {
+        var touch = args.ChangedTouches.SingleOrDefault(touch => touch.Identifier == CurrentTouchIdentifier);
+
+        if (touch != null) {
+            Drag(touch.PageY, touch.Identifier);
+        }
+    }
+
+    private void Drag(double currentY, long touchIdentifier = -1) {
+        if (OriginalItemIndex != -1 && touchIdentifier == CurrentTouchIdentifier) {
+            CurrentY = currentY;
         }
     }
 

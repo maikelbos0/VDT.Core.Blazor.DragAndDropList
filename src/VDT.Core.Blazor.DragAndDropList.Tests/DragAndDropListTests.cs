@@ -83,12 +83,12 @@ public class DragAndDropListTests {
 
         subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
 
-        await subject.StartDragging("Bar", 123, 1);
+        await subject.StartDragging("Bar", 100, 1);
 
         Assert.Equal(1, subject.OriginalItemIndex);
         Assert.Equal(1, subject.CurrentTouchIdentifier);
-        Assert.Equal(123, subject.StartY);
-        Assert.Equal(123, subject.CurrentY);
+        Assert.Equal(100, subject.StartY);
+        Assert.Equal(100, subject.CurrentY);
         Assert.Equal([25, 35, 45], subject.Heights);
     }
 
@@ -98,9 +98,9 @@ public class DragAndDropListTests {
             OriginalItemIndex = 1
         };
 
-        subject.Drag(new MouseEventArgs() { PageY = 234 });
+        subject.Drag(new MouseEventArgs() { PageY = 200 });
 
-        Assert.Equal(234, subject.CurrentY);
+        Assert.Equal(200, subject.CurrentY);
     }
 
     [Fact]
@@ -110,7 +110,7 @@ public class DragAndDropListTests {
             CurrentTouchIdentifier = 2
         };
 
-        subject.Drag(new MouseEventArgs() { PageY = 234 });
+        subject.Drag(new MouseEventArgs() { PageY = 200 });
 
         Assert.Equal(0, subject.CurrentY);
     }
@@ -121,7 +121,7 @@ public class DragAndDropListTests {
             OriginalItemIndex = -1
         };
 
-        subject.Drag(new MouseEventArgs() { PageY = 234 });
+        subject.Drag(new MouseEventArgs() { PageY = 200 });
 
         Assert.Equal(0, subject.CurrentY);
     }
@@ -135,12 +135,12 @@ public class DragAndDropListTests {
 
         subject.Drag(new TouchEventArgs() {
             ChangedTouches = [
-                new TouchPoint() { PageY = 123, Identifier = 1 },
-                new TouchPoint() { PageY = 234, Identifier = 2 }
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
             ]
         });
 
-        Assert.Equal(234, subject.CurrentY);
+        Assert.Equal(200, subject.CurrentY);
     }
 
     [Fact]
@@ -152,8 +152,8 @@ public class DragAndDropListTests {
 
         subject.Drag(new TouchEventArgs() {
             ChangedTouches = [
-                new TouchPoint() { PageY = 123, Identifier = 1 },
-                new TouchPoint() { PageY = 234, Identifier = 2 }
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
             ]
         });
 
@@ -168,8 +168,8 @@ public class DragAndDropListTests {
 
         subject.Drag(new TouchEventArgs() {
             ChangedTouches = [
-                new TouchPoint() { PageY = 123, Identifier = 1 },
-                new TouchPoint() { PageY = 234, Identifier = 2 }
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
             ]
         });
 

@@ -18,12 +18,12 @@ public class ItemContextTests {
 
         list.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
 
-        await subject.StartDragging(new MouseEventArgs() { PageY = 123 });
+        await subject.StartDragging(new MouseEventArgs() { PageY = 100 });
 
         Assert.Equal(1, list.OriginalItemIndex);
         Assert.Equal(-1, list.CurrentTouchIdentifier);
-        Assert.Equal(123, list.StartY);
-        Assert.Equal(123, list.CurrentY);
+        Assert.Equal(100, list.StartY);
+        Assert.Equal(100, list.CurrentY);
         Assert.Equal([25, 35, 45], list.Heights);
     }
 
@@ -39,15 +39,15 @@ public class ItemContextTests {
 
         await subject.StartDragging(new TouchEventArgs() {
             ChangedTouches = [
-                new TouchPoint() { PageY = 123, Identifier = 1 },
-                new TouchPoint() { PageY = 234, Identifier = 2 }
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
             ]
         });
 
         Assert.Equal(1, list.OriginalItemIndex);
         Assert.Equal(1, list.CurrentTouchIdentifier);
-        Assert.Equal(123, list.StartY);
-        Assert.Equal(123, list.CurrentY);
+        Assert.Equal(100, list.StartY);
+        Assert.Equal(100, list.CurrentY);
         Assert.Equal([25, 35, 45], list.Heights);
     }
 }

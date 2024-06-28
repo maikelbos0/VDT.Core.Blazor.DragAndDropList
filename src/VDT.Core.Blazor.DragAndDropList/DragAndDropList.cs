@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;
@@ -22,6 +23,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double CurrentY { get; set; } = 0;
     internal double DeltaY => CurrentY - StartY;
     internal int OriginalItemIndex { get; set; } = -1;
+    internal long TouchIdentifier { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
     internal int NewItemIndex {
         get {
@@ -106,11 +108,23 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         builder.CloseElement();
     }
 
-    internal async Task StartDragging(TItem itemToDrag, MouseEventArgs args) {
-        OriginalItemIndex = Items.IndexOf(itemToDrag);
-        StartY = args.PageY;
-        CurrentY = args.PageY;
-        Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
+    internal Task StartDragging(TItem itemToDrag, MouseEventArgs args)
+        => StartDragging(itemToDrag, args.PageY);
+
+    internal Task StartDragging(TItem itemToDrag, TouchEventArgs args) {
+        var touch = args.ChangedTouches.First();
+
+        return StartDragging(itemToDrag, touch.PageY, touch.Identifier);
+    }
+
+    internal async Task StartDragging(TItem itemToDrag, double pageY, long touchIdentifier = -1) {
+        if (OriginalItemIndex == -1) {
+            OriginalItemIndex = Items.IndexOf(itemToDrag);
+            TouchIdentifier = touchIdentifier;
+            StartY = pageY;
+            CurrentY = pageY;
+            Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
+        }
     }
 
     internal void Drag(MouseEventArgs args) {

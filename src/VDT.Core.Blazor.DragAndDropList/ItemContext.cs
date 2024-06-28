@@ -32,4 +32,12 @@ public class ItemContext<TItem> {
     /// <returns>A <see cref="Task"/> which completes asynchronously once the drag operation has started</returns>
     public Task StartDragging(MouseEventArgs args)
         => dragAndDropList.StartDragging(Item, args);
+
+    /// <summary>
+    /// Initiate dragging the item in the list
+    /// </summary>
+    /// <param name="args">Touch event information</param>
+    /// <returns>A <see cref="Task"/> which completes asynchronously once the drag operation has started</returns>
+    public Task StartDragging(TouchEventArgs args)
+        => dragAndDropList.StartDragging(Item, args);
 }

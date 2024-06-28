@@ -108,15 +108,6 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         builder.CloseElement();
     }
 
-    internal Task StartDragging(TItem itemToDrag, MouseEventArgs args)
-        => StartDragging(itemToDrag, args.PageY);
-
-    internal Task StartDragging(TItem itemToDrag, TouchEventArgs args) {
-        var touch = args.ChangedTouches.First();
-
-        return StartDragging(itemToDrag, touch.PageY, touch.Identifier);
-    }
-
     internal async Task StartDragging(TItem itemToDrag, double pageY, long touchIdentifier = -1) {
         if (OriginalItemIndex == -1) {
             OriginalItemIndex = Items.IndexOf(itemToDrag);

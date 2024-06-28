@@ -75,7 +75,7 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public async Task StartDragging_MouseEventArgs() {
+    public async Task StartDragging() {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz"],
             ModuleReference = Substitute.For<IJSObjectReference>()
@@ -83,30 +83,7 @@ public class DragAndDropListTests {
 
         subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
 
-        await subject.StartDragging("Bar", new MouseEventArgs() { PageY = 123 });
-
-        Assert.Equal(1, subject.OriginalItemIndex);
-        Assert.Equal(-1, subject.TouchIdentifier);
-        Assert.Equal(123, subject.StartY);
-        Assert.Equal(123, subject.CurrentY);
-        Assert.Equal([25, 35, 45], subject.Heights);
-    }
-
-    [Fact]
-    public async Task StartDragging_TouchEventArgs() {
-        var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz"],
-            ModuleReference = Substitute.For<IJSObjectReference>()
-        };
-
-        subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
-
-        await subject.StartDragging("Bar", new TouchEventArgs() {
-            ChangedTouches = [
-                new TouchPoint() { PageY = 123, Identifier = 1 },
-                new TouchPoint() { PageY = 234, Identifier = 2 }
-            ]
-        });
+        await subject.StartDragging("Bar", 123, 1);
 
         Assert.Equal(1, subject.OriginalItemIndex);
         Assert.Equal(1, subject.TouchIdentifier);

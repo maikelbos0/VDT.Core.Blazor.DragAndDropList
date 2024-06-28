@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;
@@ -31,13 +32,16 @@ public class ItemContext<TItem> {
     /// <param name="args">Mouse event information</param>
     /// <returns>A <see cref="Task"/> which completes asynchronously once the drag operation has started</returns>
     public Task StartDragging(MouseEventArgs args)
-        => dragAndDropList.StartDragging(Item, args);
+        => dragAndDropList.StartDragging(Item, args.PageY);
 
     /// <summary>
     /// Initiate dragging the item in the list
     /// </summary>
     /// <param name="args">Touch event information</param>
     /// <returns>A <see cref="Task"/> which completes asynchronously once the drag operation has started</returns>
-    public Task StartDragging(TouchEventArgs args)
-        => dragAndDropList.StartDragging(Item, args);
+    public Task StartDragging(TouchEventArgs args) {
+        var touch = args.ChangedTouches.First();
+
+        return dragAndDropList.StartDragging(Item, touch.PageY, touch.Identifier);
+    }
 }

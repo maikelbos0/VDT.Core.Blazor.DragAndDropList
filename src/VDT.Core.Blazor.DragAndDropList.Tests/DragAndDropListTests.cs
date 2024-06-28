@@ -177,12 +177,13 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public async Task StopDragging() {
+    public async Task StopDragging_MouseEventArgs() {
         DropItemEventArgs<string>? receivedArgs = null;
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux"],
             Heights = [100, 100, 100, 100],
             OriginalItemIndex = 1,
+            CurrentTouchIdentifier = -1,
             StartY = 100,
             CurrentY = 340,
             OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
@@ -191,6 +192,7 @@ public class DragAndDropListTests {
         await subject.StopDragging(new MouseEventArgs() { PageY = 200 });
 
         Assert.Equal(-1, subject.OriginalItemIndex);
+        Assert.Equal(-1, subject.CurrentTouchIdentifier);
         Assert.Equal(0, subject.StartY);
         Assert.Equal(0, subject.CurrentY);
 
@@ -201,17 +203,116 @@ public class DragAndDropListTests {
     }
 
     [Fact]
-    public async Task StopDragging_Without_OriginalItemIndex() {
+    public async Task StopDragging_MouseEventArgs_With_CurrentTouchIdentifier() {
         DropItemEventArgs<string>? receivedArgs = null;
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux"],
             Heights = [100, 100, 100, 100],
+            OriginalItemIndex = 1,
+            CurrentTouchIdentifier = 2,
             OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
         };
 
         await subject.StopDragging(new MouseEventArgs() { PageY = 200 });
 
         Assert.Null(receivedArgs);
+        Assert.Equal(1, subject.OriginalItemIndex);
+        Assert.Equal(2, subject.CurrentTouchIdentifier);
+    }
+
+    [Fact]
+    public async Task StopDragging_MouseEventArgs_Without_OriginalItemIndex() {
+        DropItemEventArgs<string>? receivedArgs = null;
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = 2,
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
+        };
+
+        await subject.StopDragging(new MouseEventArgs() { PageY = 200 });
+
+        Assert.Null(receivedArgs);
+        Assert.Equal(-1, subject.OriginalItemIndex);
+        Assert.Equal(2, subject.CurrentTouchIdentifier);
+    }
+
+    [Fact]
+    public async Task StopDragging_TouchEventArgs() {
+        DropItemEventArgs<string>? receivedArgs = null;
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = 1,
+            CurrentTouchIdentifier = 2,
+            StartY = 100,
+            CurrentY = 340,
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
+        };
+
+        await subject.StopDragging(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
+            ]
+        });
+
+        Assert.Equal(-1, subject.OriginalItemIndex);
+        Assert.Equal(-1, subject.CurrentTouchIdentifier);
+        Assert.Equal(0, subject.StartY);
+        Assert.Equal(0, subject.CurrentY);
+
+        Assert.NotNull(receivedArgs);
+        Assert.Equal(1, receivedArgs.OriginalItemIndex);
+        Assert.Equal(2, receivedArgs.NewItemIndex);
+        Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
+    }
+
+    [Fact]
+    public async Task StopDragging_TouchEventArgs_Without_CurrentTouchIdentifier() {
+        DropItemEventArgs<string>? receivedArgs = null;
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = 1,
+            CurrentTouchIdentifier = -1,
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
+        };
+
+        await subject.StopDragging(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
+            ]
+        });
+
+        Assert.Null(receivedArgs);
+        Assert.Equal(1, subject.OriginalItemIndex);
+        Assert.Equal(-1, subject.CurrentTouchIdentifier);
+    }
+
+    [Fact]
+    public async Task StopDragging_TouchEventArgs_Without_OriginalItemIndex() {
+        DropItemEventArgs<string>? receivedArgs = null;
+        var subject = new DragAndDropList<string>() {
+            Items = ["Foo", "Bar", "Baz", "Qux"],
+            Heights = [100, 100, 100, 100],
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = 1,
+            OnDropItem = EventCallback.Factory.Create<DropItemEventArgs<string>>(this, args => receivedArgs = args)
+        };
+
+        await subject.StopDragging(new TouchEventArgs() {
+            ChangedTouches = [
+                new TouchPoint() { PageY = 100, Identifier = 1 },
+                new TouchPoint() { PageY = 200, Identifier = 2 }
+            ]
+        });
+
+        Assert.Null(receivedArgs);
+        Assert.Equal(-1, subject.OriginalItemIndex);
+        Assert.Equal(1, subject.CurrentTouchIdentifier);
     }
 
     [Theory]

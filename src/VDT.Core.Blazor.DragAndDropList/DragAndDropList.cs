@@ -104,6 +104,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
         builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnTouchMove), EventCallback.Factory.Create<TouchEventArgs>(this, Drag));
         builder.AddAttribute(12, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.AddAttribute(13, nameof(GlobalEventHandler.GlobalEventHandler.OnTouchEnd), EventCallback.Factory.Create<TouchEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
@@ -135,9 +136,19 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
     }
 
-    internal async Task StopDragging(MouseEventArgs args) {
-        if (OriginalItemIndex != -1) {
-            CurrentY = args.PageY;
+    internal Task StopDragging(MouseEventArgs args) => StopDragging(args.PageY);
+
+    internal async Task StopDragging(TouchEventArgs args) {
+        var touch = args.ChangedTouches.SingleOrDefault(touch => touch.Identifier == CurrentTouchIdentifier);
+
+        if (touch != null) {
+            await StopDragging(touch.PageY, touch.Identifier);
+        }
+    }
+
+    internal async Task StopDragging(double currentY, long touchIdentifier = -1) {
+        if (OriginalItemIndex != -1 && touchIdentifier == CurrentTouchIdentifier) {
+            CurrentY = currentY;
 
             var dropEventArgs = new DropItemEventArgs<TItem>() {
                 OriginalItemIndex = OriginalItemIndex,
@@ -150,6 +161,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             dropEventArgs.ReorderedItems.Insert(NewItemIndex, item);
 
             OriginalItemIndex = -1;
+            CurrentTouchIdentifier = -1;
             StartY = 0;
             CurrentY = 0;
 

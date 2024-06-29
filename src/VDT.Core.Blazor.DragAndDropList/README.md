@@ -5,14 +5,15 @@ Blazor component that allows users to reorder items in a list by dragging and dr
 ## Features
 
 - Drag and drop items in a list to change the order
+- Touch and mouse support
 - Fully customizable item layout template
 
 ## Usage
 
 To use this components, there are two steps that must be taken.
 
-- Inside the item template, there needs to be an element that has an `@onmousedown` event callback to `context.StartDragging`, passing the `MouseEventArgs`,
-  to start the dragging action
+- Inside the item template, there needs to be an element that has an `@onmousedown` and `@ontouchstart` event callback to `context.StartDragging`, passing
+  the `MouseEventArgs` and `TouchEventArgs`, to start the dragging action
 - When the dragging item is dropped, the component `OnDropItem` event is triggered which provides an object of type `DropItemEventArgs<TItem>`; subscribe to
   this event to handle the reordering of your list
 

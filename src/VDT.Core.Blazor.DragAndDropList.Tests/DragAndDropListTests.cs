@@ -95,7 +95,8 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag_MouseEventArgs() {
         var subject = new DragAndDropList<string>() {
-            OriginalItemIndex = 1
+            OriginalItemIndex = 1,
+            CurrentTouchIdentifier = -1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 200 });
@@ -118,7 +119,8 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag_MouseEventArgs_Without_OriginalItemIndex() {
         var subject = new DragAndDropList<string>() {
-            OriginalItemIndex = -1
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = -1
         };
 
         subject.Drag(new MouseEventArgs() { PageY = 200 });
@@ -163,7 +165,8 @@ public class DragAndDropListTests {
     [Fact]
     public void Drag_TouchEventArgs_Without_OriginalItemIndex() {
         var subject = new DragAndDropList<string>() {
-            OriginalItemIndex = -1
+            OriginalItemIndex = -1,
+            CurrentTouchIdentifier = 2
         };
 
         subject.Drag(new TouchEventArgs() {

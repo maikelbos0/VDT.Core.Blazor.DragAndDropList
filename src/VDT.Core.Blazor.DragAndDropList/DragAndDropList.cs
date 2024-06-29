@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace VDT.Core.Blazor.DragAndDropList;
@@ -22,6 +23,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double CurrentY { get; set; } = 0;
     internal double DeltaY => CurrentY - StartY;
     internal int OriginalItemIndex { get; set; } = -1;
+    internal long CurrentTouchIdentifier { get; set; } = -1;
     internal List<double> Heights { get; set; } = new();
     internal int NewItemIndex {
         get {
@@ -84,44 +86,70 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder) {
         builder.OpenElement(1, "div");
-        builder.AddAttribute(2, "class", "drag-and-drop-list");
-        builder.AddElementReferenceCapture(3, containerReference => this.containerReference = containerReference);
+        builder.AddAttribute(2, "style", "touch-action: none");
+        builder.AddAttribute(3, "class", "drag-and-drop-list");
+        builder.AddElementReferenceCapture(4, containerReference => this.containerReference = containerReference);
 
-        builder.OpenRegion(4);
+        builder.OpenRegion(5);
         for (var i = 0; i < Items.Count; i++) {
-            builder.OpenElement(5, "div");
+            builder.OpenElement(6, "div");
             builder.SetKey(KeySelector(Items[i]));
-            builder.AddAttribute(6, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
-            builder.AddAttribute(7, "style", GetStyle(i));
-            builder.AddContent(8, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
+            builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
+            builder.AddAttribute(8, "style", GetStyle(i));
+            builder.AddContent(9, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
             builder.CloseElement();
         }
         builder.CloseRegion();
 
-        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(9);
-        builder.AddAttribute(10, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
-        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.OpenComponent<GlobalEventHandler.GlobalEventHandler>(10);
+        builder.AddAttribute(11, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseMove), EventCallback.Factory.Create<MouseEventArgs>(this, Drag));
+        builder.AddAttribute(12, nameof(GlobalEventHandler.GlobalEventHandler.OnTouchMove), EventCallback.Factory.Create<TouchEventArgs>(this, Drag));
+        builder.AddAttribute(13, nameof(GlobalEventHandler.GlobalEventHandler.OnMouseUp), EventCallback.Factory.Create<MouseEventArgs>(this, StopDragging));
+        builder.AddAttribute(14, nameof(GlobalEventHandler.GlobalEventHandler.OnTouchEnd), EventCallback.Factory.Create<TouchEventArgs>(this, StopDragging));
         builder.CloseComponent();
 
         builder.CloseElement();
     }
 
-    internal async Task StartDragging(TItem itemToDrag, MouseEventArgs args) {
-        OriginalItemIndex = Items.IndexOf(itemToDrag);
-        StartY = args.PageY;
-        CurrentY = args.PageY;
-        Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
-    }
-
-    internal void Drag(MouseEventArgs args) {
-        if (OriginalItemIndex != -1) {
-            CurrentY = args.PageY;
+    internal async Task StartDragging(TItem itemToDrag, double pageY, long touchIdentifier = -1) {
+        if (OriginalItemIndex == -1) {
+            OriginalItemIndex = Items.IndexOf(itemToDrag);
+            CurrentTouchIdentifier = touchIdentifier;
+            StartY = pageY;
+            CurrentY = pageY;
+            Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
         }
     }
 
-    internal async Task StopDragging(MouseEventArgs args) {
-        if (OriginalItemIndex != -1) {
-            CurrentY = args.PageY;
+    internal void Drag(MouseEventArgs args) => Drag(args.PageY);
+
+    internal void Drag(TouchEventArgs args) {
+        var touch = args.ChangedTouches.SingleOrDefault(touch => touch.Identifier == CurrentTouchIdentifier);
+
+        if (touch != null) {
+            Drag(touch.PageY, touch.Identifier);
+        }
+    }
+
+    private void Drag(double currentY, long touchIdentifier = -1) {
+        if (OriginalItemIndex != -1 && touchIdentifier == CurrentTouchIdentifier) {
+            CurrentY = currentY;
+        }
+    }
+
+    internal Task StopDragging(MouseEventArgs args) => StopDragging(args.PageY);
+
+    internal async Task StopDragging(TouchEventArgs args) {
+        var touch = args.ChangedTouches.SingleOrDefault(touch => touch.Identifier == CurrentTouchIdentifier);
+
+        if (touch != null) {
+            await StopDragging(touch.PageY, touch.Identifier);
+        }
+    }
+
+    internal async Task StopDragging(double currentY, long touchIdentifier = -1) {
+        if (OriginalItemIndex != -1 && touchIdentifier == CurrentTouchIdentifier) {
+            CurrentY = currentY;
 
             var dropEventArgs = new DropItemEventArgs<TItem>() {
                 OriginalItemIndex = OriginalItemIndex,
@@ -134,6 +162,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             dropEventArgs.ReorderedItems.Insert(NewItemIndex, item);
 
             OriginalItemIndex = -1;
+            CurrentTouchIdentifier = -1;
             StartY = 0;
             CurrentY = 0;
 

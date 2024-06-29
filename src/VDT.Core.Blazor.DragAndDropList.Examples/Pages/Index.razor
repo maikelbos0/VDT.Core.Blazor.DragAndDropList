@@ -8,8 +8,8 @@
 
 <ul>
     <li>
-        Inside the item template, there needs to be an element that has an <code>@@onmousedown</code> event callback to <code>context.StartDragging</code>,
-        passing the <code>MouseEventArgs</code>, to start the dragging action
+        Inside the item template, there needs to be an element that has an <code>@@onmousedown</code> and <code>@@ontouchstart</code> event callback to
+        <code>context.StartDragging</code>, passing the <code>MouseEventArgs</code> and <code>TouchEventArgs</code>, to start the dragging action
     </li>
     <li>
         When the dragging item is dropped, the component <code>OnDropItem</code> event is triggered which provides an object of type 
@@ -31,7 +31,9 @@
                 <div class="text-muted text-truncate">@context.Item.Id</div>
             </div>
             <div>
-                <button class="btn btn-primary" @onmousedown="context.StartDragging"><span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span></button>
+                <button class="btn btn-primary" @onmousedown="context.StartDragging" @ontouchstart="context.StartDragging">
+                    <span>&varr;</span><span class="ps-2 d-none d-lg-inline">Move</span>
+                </button>
             </div>
         </div>
     </ItemTemplate>

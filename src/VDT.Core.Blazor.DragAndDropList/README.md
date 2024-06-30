@@ -44,7 +44,7 @@ which contains the reordered list.
     private List<Item> Items { get; set; } = Enumerable.Range(1, 8).Select(i => new Item(Guid.NewGuid(), $"Item {i}")).ToList();
 
     private void ItemDropped(DropItemEventArgs<Item> args) {
-        Items = args.ReorderedItems;
+        Items.Reorder(args);
     }
 }
 ```

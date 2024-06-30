@@ -17,9 +17,4 @@ public class DropItemEventArgs<TItem> : EventArgs {
     /// Gets or sets the suggested new index for the item initiating the drag and drop action
     /// </summary>
     public int NewItemIndex { get; set; }
-
-    /// <summary>
-    /// Gets or sets the list as it will be after reordering according to the drag and drop action
-    /// </summary>
-    public List<TItem> ReorderedItems { get; set; } = default!;
 }

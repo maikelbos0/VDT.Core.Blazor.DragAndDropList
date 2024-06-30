@@ -59,7 +59,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the items in the list
     /// </summary>
-    [Parameter] public IList<TItem> Items { get; set; } = new List<TItem>();
+    [EditorRequired, Parameter] public IList<TItem> Items { get; set; } = new List<TItem>();
 
     /// <summary>
     /// Gets or sets the method for selecting unique keys for the items in the list; defaults to selecting the items themselves
@@ -69,12 +69,12 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the callback that will be invoked when an item is dropped after dragging
     /// </summary>
-    [Parameter] public EventCallback<DropItemEventArgs> OnDropItem { get; set; }
+    [EditorRequired, Parameter] public EventCallback<DropItemEventArgs> OnDropItem { get; set; }
 
     /// <summary>
     /// Gets or sets the layout template for rendering an item
     /// </summary>
-    [Parameter] public RenderFragment<ItemContext<TItem>> ItemTemplate { get; set; } = itemContext => builder => { };
+    [EditorRequired, Parameter] public RenderFragment<ItemContext<TItem>> ItemTemplate { get; set; } = itemContext => builder => { };
 
     /// <inheritdoc/>
     protected override async Task OnAfterRenderAsync(bool firstRender) {

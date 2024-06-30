@@ -69,7 +69,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the callback that will be invoked when an item is dropped after dragging
     /// </summary>
-    [Parameter] public EventCallback<DropItemEventArgs<TItem>> OnDropItem { get; set; }
+    [Parameter] public EventCallback<DropItemEventArgs> OnDropItem { get; set; }
 
     /// <summary>
     /// Gets or sets the layout template for rendering an item
@@ -151,7 +151,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         if (OriginalItemIndex != -1 && touchIdentifier == CurrentTouchIdentifier) {
             CurrentY = currentY;
 
-            var dropEventArgs = new DropItemEventArgs<TItem>() {
+            var args = new DropItemEventArgs() {
                 OriginalItemIndex = OriginalItemIndex,
                 NewItemIndex = NewItemIndex
             };
@@ -161,7 +161,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             StartY = 0;
             CurrentY = 0;
 
-            await OnDropItem.InvokeAsync(dropEventArgs);
+            await OnDropItem.InvokeAsync(args);
         }
     }
 

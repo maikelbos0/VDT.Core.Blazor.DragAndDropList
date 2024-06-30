@@ -59,7 +59,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the items in the list
     /// </summary>
-    [Parameter] public List<TItem> Items { get; set; } = new();
+    [Parameter] public IList<TItem> Items { get; set; } = new List<TItem>();
 
     /// <summary>
     /// Gets or sets the method for selecting unique keys for the items in the list; defaults to selecting the items themselves

@@ -153,13 +153,8 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
 
             var dropEventArgs = new DropItemEventArgs<TItem>() {
                 OriginalItemIndex = OriginalItemIndex,
-                NewItemIndex = NewItemIndex,
-                ReorderedItems = new List<TItem>(Items)
+                NewItemIndex = NewItemIndex
             };
-            var item = dropEventArgs.ReorderedItems[OriginalItemIndex];
-
-            dropEventArgs.ReorderedItems.RemoveAt(OriginalItemIndex);
-            dropEventArgs.ReorderedItems.Insert(NewItemIndex, item);
 
             OriginalItemIndex = -1;
             CurrentTouchIdentifier = -1;

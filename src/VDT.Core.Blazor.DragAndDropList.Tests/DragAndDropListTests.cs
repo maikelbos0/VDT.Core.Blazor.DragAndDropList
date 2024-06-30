@@ -202,7 +202,6 @@ public class DragAndDropListTests {
         Assert.NotNull(receivedArgs);
         Assert.Equal(1, receivedArgs.OriginalItemIndex);
         Assert.Equal(2, receivedArgs.NewItemIndex);
-        Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
     }
 
     [Fact]
@@ -269,7 +268,6 @@ public class DragAndDropListTests {
         Assert.NotNull(receivedArgs);
         Assert.Equal(1, receivedArgs.OriginalItemIndex);
         Assert.Equal(2, receivedArgs.NewItemIndex);
-        Assert.Equal(["Foo", "Baz", "Bar", "Qux"], receivedArgs.ReorderedItems);
     }
 
     [Fact]

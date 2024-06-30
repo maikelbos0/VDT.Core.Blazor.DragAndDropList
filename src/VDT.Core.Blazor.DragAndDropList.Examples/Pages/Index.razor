@@ -4,9 +4,10 @@
 
 <p>Blazor component that allows users to reorder items in a list by dragging and dropping.</p>
 
-<p>To use this components, there are two steps that must be taken.</p>
+<p>To start using this component, follow the below steps.</p>
 
 <ul>
+    <li>Assign your list of items to the <code>Items</code> property</li>
     <li>
         Inside the item template, there needs to be an element that has an <code>@@onmousedown</code> and <code>@@ontouchstart</code> event callback to
         <code>context.StartDragging</code>, passing the <code>MouseEventArgs</code> and <code>TouchEventArgs</code>, to start the dragging action
@@ -20,7 +21,7 @@
 <p>
     Please note that reordering must be done in client code since the component should not change its input property <code>Items</code>. To handle reordering
     you can either perform manual switching using the <code>OriginalItemIndex</code> and <code>NewItemIndex</code> properties of the event arguments parameter,
-    or use the <code>ReorderedItems</code> property which contains the reordered list.
+    or use the <code>IList&lt;T&gt;.Reorder</code> with the event arguments.
 </p>
 
 <DragAndDropList Items="Items" OnDropItem="ItemDropped">

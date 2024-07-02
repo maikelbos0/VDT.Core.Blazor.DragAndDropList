@@ -1,10 +1,9 @@
 ﻿
-::deep .drag-and-drop-list-item-active > div {
+::deep .drag-and-drop-list-item-active > div > div {
     box-shadow: 0 0 0.75rem #dee2e6;
 }
 
 ::deep .drag-and-drop-list-item:not(.drag-and-drop-list-item-active) {
-    position: relative;
     top: 0;
     transition: top 0.4s ease-in-out;
 }

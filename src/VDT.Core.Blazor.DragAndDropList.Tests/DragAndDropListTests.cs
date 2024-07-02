@@ -317,12 +317,12 @@ public class DragAndDropListTests {
     }
 
     [Theory]
-    [InlineData(0, "")]
-    [InlineData(1, "z-index: 1000; position: relative; top: 240px")]
-    [InlineData(2, "position: relative; top: -100px")]
-    [InlineData(3, "position: relative; top: -100px")]
-    [InlineData(4, "")]
-    public void GetStyle(int itemIndex, string expectedStyle) {
+    [InlineData(0, "display: flex; position: relative")]
+    [InlineData(1, "display: flex; position: relative; z-index: 1000; top: 240px")]
+    [InlineData(2, "display: flex; position: relative; top: -100px")]
+    [InlineData(3, "display: flex; position: relative; top: -100px")]
+    [InlineData(4, "display: flex; position: relative")]
+    public void GetItemStyle(int itemIndex, string expectedStyle) {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
             Heights = [90, 100, 110, 110, 110],
@@ -331,11 +331,11 @@ public class DragAndDropListTests {
             CurrentY = 340
         };
 
-        Assert.Equal(expectedStyle, subject.GetStyle(itemIndex));
+        Assert.Equal(expectedStyle, subject.GetItemStyle(itemIndex));
     }
 
     [Fact]
-    public void GetStyle_Without_OriginalItemIndex() {
+    public void GetItemStyle_Without_OriginalItemIndex() {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
             Heights = [100, 100, 100, 100],
@@ -344,11 +344,11 @@ public class DragAndDropListTests {
             CurrentY = 340
         };
 
-        Assert.Equal("", subject.GetStyle(2));
+        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
     }
 
     [Fact]
-    public void GetStyle_Without_Delta() {
+    public void GetItemStyle_Without_Delta() {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
             Heights = [100, 100, 100, 100],
@@ -357,6 +357,6 @@ public class DragAndDropListTests {
             CurrentY = 100
         };
 
-        Assert.Equal("", subject.GetStyle(2));
+        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
     }
 }

@@ -63,7 +63,7 @@ items. Further styles can be applied either directly on the item layout template
 
 ```
 /* Display a shadow around the currently active element's content */
-.drag-and-drop-list-item-active > div {
+.drag-and-drop-list-item-active > div > div {
     box-shadow: 0 0 0.75rem #dee2e6;
 }
 

@@ -8,14 +8,11 @@
 
 	<PropertyGroup>
 		<PackageId>VDT.Core.Blazor.DragAndDropList</PackageId>
-		<Version>0.3.0</Version>
+		<Version>0.4.0</Version>
 		<Title>VDT.Core.Blazor.DragAndDropList</Title>
 		<PackageIcon>icon_128.png</PackageIcon>
 		<Description>Blazor component that allows users to reorder items in a list by dragging and dropping</Description>
-		<PackageReleaseNotes>- Switch from DropItemEventArgs.ReorderedItems property to IList&lt;T&gt;.Reorder extension method for reordering list
-- Remove generic type argument from DropItemEventArgs
-- Switch to IList&lt;T&gt; interface for Items property
-- Mark required component properties as required</PackageReleaseNotes>
+		<PackageReleaseNotes>- Fix item offset height so it includes margins</PackageReleaseNotes>
 		<Authors>Maikel Bos</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Copyright © 2024 Maikel Bos</Copyright>

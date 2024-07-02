@@ -317,11 +317,11 @@ public class DragAndDropListTests {
     }
 
     [Theory]
-    [InlineData(0, "")]
-    [InlineData(1, "z-index: 1000; position: relative; top: 240px")]
-    [InlineData(2, "position: relative; top: -100px")]
-    [InlineData(3, "position: relative; top: -100px")]
-    [InlineData(4, "")]
+    [InlineData(0, "display: flex; position: relative")]
+    [InlineData(1, "display: flex; position: relative; z-index: 1000; top: 240px")]
+    [InlineData(2, "display: flex; position: relative; top: -100px")]
+    [InlineData(3, "display: flex; position: relative; top: -100px")]
+    [InlineData(4, "display: flex; position: relative")]
     public void GetItemStyle(int itemIndex, string expectedStyle) {
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
@@ -344,7 +344,7 @@ public class DragAndDropListTests {
             CurrentY = 340
         };
 
-        Assert.Equal("", subject.GetItemStyle(2));
+        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
     }
 
     [Fact]
@@ -357,6 +357,6 @@ public class DragAndDropListTests {
             CurrentY = 100
         };
 
-        Assert.Equal("", subject.GetItemStyle(2));
+        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
     }
 }

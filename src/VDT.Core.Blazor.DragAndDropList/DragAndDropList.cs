@@ -166,25 +166,27 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     }
 
     internal string GetItemStyle(int itemIndex) {
+        const string defaultStyle = "display: flex; position: relative";
+
         if (OriginalItemIndex == -1 || DeltaY == 0) {
-            return "";
+            return defaultStyle;
         }
 
         if (itemIndex == OriginalItemIndex) {
-            return FormattableString.Invariant($"z-index: 1000; position: relative; top: {DeltaY}px");
+            return FormattableString.Invariant($"{defaultStyle}; z-index: 1000; top: {DeltaY}px");
         }
 
         var newItemIndex = NewItemIndex;
 
         if (OriginalItemIndex < newItemIndex && OriginalItemIndex < itemIndex && newItemIndex >= itemIndex) {
-            return FormattableString.Invariant($"position: relative; top: {-Heights[OriginalItemIndex]}px");
+            return FormattableString.Invariant($"{defaultStyle}; top: {-Heights[OriginalItemIndex]}px");
         }
 
         if (OriginalItemIndex > newItemIndex && OriginalItemIndex > itemIndex && newItemIndex <= itemIndex) {
-            return FormattableString.Invariant($"position: relative; top: {Heights[OriginalItemIndex]}px");
+            return FormattableString.Invariant($"{defaultStyle}; top: {Heights[OriginalItemIndex]}px");
         }
 
-        return "";
+        return defaultStyle;
     }
 
     /// <inheritdoc/>

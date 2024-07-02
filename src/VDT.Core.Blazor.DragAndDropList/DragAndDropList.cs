@@ -95,7 +95,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             builder.OpenElement(6, "div");
             builder.SetKey(KeySelector(Items[i]));
             builder.AddAttribute(7, "class", i == OriginalItemIndex ? "drag-and-drop-list-item drag-and-drop-list-item-active" : "drag-and-drop-list-item");
-            builder.AddAttribute(8, "style", GetStyle(i));
+            builder.AddAttribute(8, "style", GetItemStyle(i));
             builder.AddContent(9, ItemTemplate(new ItemContext<TItem>(this, Items[i])));
             builder.CloseElement();
         }
@@ -165,7 +165,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
         }
     }
 
-    internal string GetStyle(int itemIndex) {
+    internal string GetItemStyle(int itemIndex) {
         if (OriginalItemIndex == -1 || DeltaY == 0) {
             return "";
         }

@@ -171,7 +171,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal string GetItemStyle(int itemIndex) {
         const string defaultStyle = "display: flex; position: relative";
 
-        if (OriginalItemIndex == -1 || DeltaY == 0) {
+        if (OriginalItemIndex == -1) {
             return defaultStyle;
         }
 

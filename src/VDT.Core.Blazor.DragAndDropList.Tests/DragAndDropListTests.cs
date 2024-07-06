@@ -346,17 +346,4 @@ public class DragAndDropListTests {
 
         Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
     }
-
-    [Fact]
-    public void GetItemStyle_Without_Delta() {
-        var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
-            Heights = [100, 100, 100, 100],
-            OriginalItemIndex = 1,
-            StartY = 100,
-            CurrentY = 100
-        };
-
-        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
-    }
 }

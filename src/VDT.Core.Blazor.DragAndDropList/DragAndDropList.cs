@@ -67,6 +67,11 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     [Parameter] public Func<TItem, object?> KeySelector { get; set; } = item => item;
 
     /// <summary>
+    /// Gets or sets the callback that will be invoked when an item starts being dragged
+    /// </summary>
+    [Parameter] public EventCallback<DragItemEventArgs> OnDragItem { get; set; }
+    
+    /// <summary>
     /// Gets or sets the callback that will be invoked when an item is dropped after dragging
     /// </summary>
     [EditorRequired, Parameter] public EventCallback<DropItemEventArgs> OnDropItem { get; set; }
@@ -121,6 +126,10 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             StartY = pageY;
             CurrentY = pageY;
             Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
+
+            await OnDragItem.InvokeAsync(new DragItemEventArgs() { 
+                OriginalItemIndex = OriginalItemIndex 
+            });
         }
     }
 
@@ -171,7 +180,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal string GetItemStyle(int itemIndex) {
         const string defaultStyle = "display: flex; position: relative";
 
-        if (OriginalItemIndex == -1 || DeltaY == 0) {
+        if (OriginalItemIndex == -1) {
             return defaultStyle;
         }
 

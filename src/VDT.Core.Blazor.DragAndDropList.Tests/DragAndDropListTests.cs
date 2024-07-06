@@ -76,9 +76,11 @@ public class DragAndDropListTests {
 
     [Fact]
     public async Task StartDragging() {
+        DragItemEventArgs? receivedArgs = null;
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz"],
-            ModuleReference = Substitute.For<IJSObjectReference>()
+            ModuleReference = Substitute.For<IJSObjectReference>(),
+            OnDragItem = EventCallback.Factory.Create<DragItemEventArgs>(this, args => receivedArgs = args)
         };
 
         subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
@@ -90,6 +92,9 @@ public class DragAndDropListTests {
         Assert.Equal(100, subject.StartY);
         Assert.Equal(100, subject.CurrentY);
         Assert.Equal([25, 35, 45], subject.Heights);
+
+        Assert.NotNull(receivedArgs);
+        Assert.Equal(1, receivedArgs.OriginalItemIndex);
     }
 
     [Fact]
@@ -342,19 +347,6 @@ public class DragAndDropListTests {
             OriginalItemIndex = -1,
             StartY = 100,
             CurrentY = 340
-        };
-
-        Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));
-    }
-
-    [Fact]
-    public void GetItemStyle_Without_Delta() {
-        var subject = new DragAndDropList<string>() {
-            Items = ["Foo", "Bar", "Baz", "Qux", "Quux"],
-            Heights = [100, 100, 100, 100],
-            OriginalItemIndex = 1,
-            StartY = 100,
-            CurrentY = 100
         };
 
         Assert.Equal("display: flex; position: relative", subject.GetItemStyle(2));

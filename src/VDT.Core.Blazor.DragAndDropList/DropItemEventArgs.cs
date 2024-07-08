@@ -21,4 +21,9 @@ public class DropItemEventArgs<TItem> : EventArgs {
     /// Gets or sets the suggested new index for the item initiating the drag and drop action
     /// </summary>
     public int NewItemIndex { get; set; }
+
+    /// <summary>
+    /// Gets the difference in index between <see cref="OriginalItemIndex"/> and <see cref="NewItemIndex"/>
+    /// </summary>
+    public int IndexDelta => OriginalItemIndex - NewItemIndex;
 }

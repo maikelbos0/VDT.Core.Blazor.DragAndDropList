@@ -20,8 +20,14 @@
 
 <p>
     Please note that reordering must be done in client code since the component should not change its input property <code>Items</code>. To handle reordering
-    you can either perform manual switching using the <code>OriginalItemIndex</code> and <code>NewItemIndex</code> properties of the event arguments parameter,
-    or use the <code>IList&lt;T&gt;.Reorder</code> with the event arguments.
+    you can either perform manual switching using the <code>Item</code>, <code>OriginalItemIndex</code>, <code>NewItemIndex</code> and <code>IndexDelta</code>
+    properties of the event arguments parameter, or use the <code>IList&lt;TItem&gt;.Reorder</code> extension method. If a reordering action needs to be
+    reverted, you can use the <code>IList&lt;TItem&gt;.RevertOrder</code> extension method.
+</p>
+
+<p>
+    If you need to know when a drag and drop action is initiated, you can also subscribe to the <code>OnDragItem</code> event, which provides an object of type
+    <code>DragItemEventArgs&lt;TItem&gt;</code> with <code>Item</code> and <code>OriginalItemIndex</code> properties.
 </p>
 
 <DragAndDropList TItem="Item" Items="Items" OnDropItem="ItemDropped">

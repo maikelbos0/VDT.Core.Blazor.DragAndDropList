@@ -19,8 +19,11 @@ To start using this component, follow the below steps.
   this event to handle the reordering of your list
 
 Please note that reordering must be done in client code since the component should not change its input property `Items`. To handle reordering you can either
-perform manual switching using the `OriginalItemIndex` and `NewItemIndex` properties of the event arguments parameter, or use the `IList<T>.Reorder` with the
-event arguments.
+perform manual switching using the `Item`, `OriginalItemIndex`, `NewItemIndex` and `IndexDelta` properties of the event arguments parameter, or use the
+`IList<TItem>.Reorder` extension method. If a reordering action needs to be reverted, you can use the `IList<TItem>.RevertOrder` extension method.
+
+If you need to know when a drag and drop action is initiated, you can also subscribe to the `OnDragItem` event, which provides an object of type
+`DragItemEventArgs<TItem>` with `Item` and `OriginalItemIndex` properties.
 
 ### Example
 

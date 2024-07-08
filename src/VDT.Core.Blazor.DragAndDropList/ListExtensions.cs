@@ -12,11 +12,9 @@ public static class ListExtensions {
     /// <typeparam name="TItem">Item type</typeparam>
     /// <param name="source">List to reorder</param>
     /// <param name="args">Event arguments according to which the list should be reordered</param>
-    public static void Reorder<TItem>(this IList<TItem> source, DropItemEventArgs args) {
-        // TODO get from args
-        var item = source[args.OriginalItemIndex];
+    public static void Reorder<TItem>(this IList<TItem> source, DropItemEventArgs<TItem> args) {
         source.RemoveAt(args.OriginalItemIndex);
-        source.Insert(args.NewItemIndex, item);
+        source.Insert(args.NewItemIndex, args.Item);
     }
 
     /// <summary>
@@ -25,10 +23,8 @@ public static class ListExtensions {
     /// <typeparam name="TItem">Item type</typeparam>
     /// <param name="source">List to revert the reordering for</param>
     /// <param name="args">Event arguments according to which the reordered list should be reverted</param>
-    public static void RevertOrder<TItem>(this IList<TItem> source, DropItemEventArgs args) {
-        // TODO get from args
-        var item = source[args.NewItemIndex];
+    public static void RevertOrder<TItem>(this IList<TItem> source, DropItemEventArgs<TItem> args) {
         source.RemoveAt(args.NewItemIndex);
-        source.Insert(args.OriginalItemIndex, item);
+        source.Insert(args.OriginalItemIndex, args.Item);
     }
 }

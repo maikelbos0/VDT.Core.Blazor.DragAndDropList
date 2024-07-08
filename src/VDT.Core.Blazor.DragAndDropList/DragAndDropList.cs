@@ -69,7 +69,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the callback that will be invoked when an item starts being dragged
     /// </summary>
-    [Parameter] public EventCallback<DragItemEventArgs> OnDragItem { get; set; }
+    [Parameter] public EventCallback<DragItemEventArgs<TItem>> OnDragItem { get; set; }
 
     /// <summary>
     /// Gets or sets the callback that will be invoked when an item is dropped after dragging
@@ -127,7 +127,8 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
             CurrentY = pageY;
             Heights = await ModuleReference.InvokeAsync<List<double>>("getElementHeights", containerReference);
 
-            await OnDragItem.InvokeAsync(new DragItemEventArgs() {
+            await OnDragItem.InvokeAsync(new DragItemEventArgs<TItem>() {
+                Item = itemToDrag,
                 OriginalItemIndex = OriginalItemIndex
             });
         }

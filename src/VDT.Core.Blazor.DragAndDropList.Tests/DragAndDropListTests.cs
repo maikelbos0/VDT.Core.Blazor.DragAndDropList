@@ -76,11 +76,11 @@ public class DragAndDropListTests {
 
     [Fact]
     public async Task StartDragging() {
-        DragItemEventArgs? receivedArgs = null;
+        DragItemEventArgs<string>? receivedArgs = null;
         var subject = new DragAndDropList<string>() {
             Items = ["Foo", "Bar", "Baz"],
             ModuleReference = Substitute.For<IJSObjectReference>(),
-            OnDragItem = EventCallback.Factory.Create<DragItemEventArgs>(this, args => receivedArgs = args)
+            OnDragItem = EventCallback.Factory.Create<DragItemEventArgs<string>>(this, args => receivedArgs = args)
         };
 
         subject.ModuleReference.InvokeAsync<List<double>>("getElementHeights", Arg.Any<object?[]?>()).Returns([25, 35, 45]);
@@ -94,6 +94,7 @@ public class DragAndDropListTests {
         Assert.Equal([25, 35, 45], subject.Heights);
 
         Assert.NotNull(receivedArgs);
+        Assert.Equal("Bar", receivedArgs.Item);
         Assert.Equal(1, receivedArgs.OriginalItemIndex);
     }
 

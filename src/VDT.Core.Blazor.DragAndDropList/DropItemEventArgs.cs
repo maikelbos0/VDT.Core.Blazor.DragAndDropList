@@ -23,7 +23,7 @@ public class DropItemEventArgs<TItem> : EventArgs {
     public int NewItemIndex { get; set; }
 
     /// <summary>
-    /// Gets the difference in index between <see cref="OriginalItemIndex"/> and <see cref="NewItemIndex"/>
+    /// Gets the difference in index between <see cref="NewItemIndex"/> and <see cref="OriginalItemIndex"/>
     /// </summary>
-    public int IndexDelta => OriginalItemIndex - NewItemIndex;
+    public int IndexDelta => NewItemIndex - OriginalItemIndex;
 }

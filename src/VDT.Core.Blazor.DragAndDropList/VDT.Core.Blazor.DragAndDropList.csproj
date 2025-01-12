@@ -1,18 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<WarningsAsErrors>nullable</WarningsAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<PackageId>VDT.Core.Blazor.DragAndDropList</PackageId>
-		<Version>1.1.0</Version>
+		<Version>2.0.0</Version>
 		<Title>VDT.Core.Blazor.DragAndDropList</Title>
 		<PackageIcon>icon_128.png</PackageIcon>
 		<Description>Blazor component that allows users to reorder items in a list by dragging and dropping</Description>
-		<PackageReleaseNotes>- Fix calculation for index delta</PackageReleaseNotes>
+		<PackageReleaseNotes>- Removed .net 6.0 and .net 7.0 support
+- Added explicit .net 9.0 support</PackageReleaseNotes>
 		<Authors>Maikel Bos</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Copyright © 2024 Maikel Bos</Copyright>
@@ -34,17 +35,13 @@
 		<None Include="README.md" pack="true" PackagePath="." />
 		<None Include="icon_128.png" pack="true" PackagePath="." />
 	</ItemGroup>
-
-	<ItemGroup Condition="$(TargetFramework) == 'net6.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.0" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(TargetFramework) == 'net7.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.0" />
-	</ItemGroup>
-
+	
 	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net9.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,7 +49,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="3.2.0" />
+	  <PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="4.0.0" />
 	</ItemGroup>
 
 </Project>

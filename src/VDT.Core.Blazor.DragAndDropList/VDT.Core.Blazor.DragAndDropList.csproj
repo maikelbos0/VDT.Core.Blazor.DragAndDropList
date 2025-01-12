@@ -48,7 +48,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="3.2.0" />
+	  <PackageReference Include="VDT.Core.Blazor.GlobalEventHandler" Version="4.0.0" />
 	</ItemGroup>
 
 </Project>

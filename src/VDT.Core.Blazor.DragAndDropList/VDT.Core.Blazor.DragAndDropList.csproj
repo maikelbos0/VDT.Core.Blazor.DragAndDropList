@@ -8,11 +8,12 @@
 
 	<PropertyGroup>
 		<PackageId>VDT.Core.Blazor.DragAndDropList</PackageId>
-		<Version>1.1.0</Version>
+		<Version>2.0.0</Version>
 		<Title>VDT.Core.Blazor.DragAndDropList</Title>
 		<PackageIcon>icon_128.png</PackageIcon>
 		<Description>Blazor component that allows users to reorder items in a list by dragging and dropping</Description>
-		<PackageReleaseNotes>- Fix calculation for index delta</PackageReleaseNotes>
+		<PackageReleaseNotes>- Removed .net 6.0 and .net 7.0 support
+- Added explicit .net 9.0 support</PackageReleaseNotes>
 		<Authors>Maikel Bos</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Copyright>Copyright © 2024 Maikel Bos</Copyright>

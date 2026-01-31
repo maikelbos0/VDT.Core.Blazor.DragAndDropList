@@ -24,7 +24,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     internal double DeltaY => CurrentY - StartY;
     internal int OriginalItemIndex { get; set; } = -1;
     internal long CurrentTouchIdentifier { get; set; } = -1;
-    internal List<double> Heights { get; set; } = new();
+    internal List<double> Heights { get; set; } = [];
     internal int NewItemIndex {
         get {
             if (OriginalItemIndex == -1) {
@@ -59,7 +59,7 @@ public class DragAndDropList<TItem> : ComponentBase, IAsyncDisposable {
     /// <summary>
     /// Gets or sets the items in the list
     /// </summary>
-    [EditorRequired, Parameter] public IList<TItem> Items { get; set; } = new List<TItem>();
+    [EditorRequired, Parameter] public IList<TItem> Items { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the method for selecting unique keys for the items in the list; defaults to selecting the items themselves

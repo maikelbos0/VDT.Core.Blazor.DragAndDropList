@@ -2,11 +2,11 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using NSubstitute;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,12 +26,9 @@ public class DragAndDropListTests {
     [Fact]
     public void Module_Has_Correct_Fingerprint() {
         var filePath = Directory.GetFiles(Path.Combine("..", "..", "..", "..", "VDT.Core.Blazor.DragAndDropList", "wwwroot"), "draganddroplist.*.js").Single();
-#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-        var fingerprintFinder = new Regex("draganddroplist\\.([a-f0-9]+)\\.js$", RegexOptions.IgnoreCase);
-#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
-        var fingerprint = fingerprintFinder.Match(filePath).Groups[1].Value;
+        var fingerprint = Path.GetFileNameWithoutExtension(filePath)[16..];
         var fileContents = File.ReadAllBytes(filePath).Where(b => b != '\r').ToArray(); // Normalize newlines between Windows and Linux
-        var expectedFingerprint = string.Join("", SHA256.HashData(fileContents).Take(5).Select(b => b.ToString("x2")));
+        var expectedFingerprint = Convert.ToHexStringLower([.. SHA256.HashData(fileContents).Take(5)]);
 
         Assert.Equal(expectedFingerprint, fingerprint);
     }
